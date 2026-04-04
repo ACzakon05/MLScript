@@ -1,0 +1,31 @@
+{
+  "name": "mlscript",
+  "displayName": "MLScript",
+  "description": "Language support for MLScript",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.110.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "mlscript",
+      "aliases": ["MLScript", "mlscript"],
+      "extensions": [".mls"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "mlscript",
+      "scopeName": "source.mls",
+      "path": "./syntaxes/mlscript.tmLanguage.json"
+    }],
+    "snippets": [
+        {
+            "language": "mlscript",
+            "path": "./snippets.json"
+        }
+    ]
+  }
+}

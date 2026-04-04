@@ -1,0 +1,23 @@
+# Build output
+mlscript
+mlscript.out.py
+build/
+
+# IDE configurations
+.vscode/
+
+# ANTLR tools and generated files
+*.jar
+generated/
+.antlr/
+.antlr4/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# VS Code Extension
+vscode-extension/node_modules/
+vscode-extension/out/
+vscode-extension/.vscode-test/
+*.vsix

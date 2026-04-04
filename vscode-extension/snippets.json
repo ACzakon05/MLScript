@@ -1,0 +1,9 @@
+{
+    "Load Dataset": {
+        "prefix": "LOAD",
+        "body": [
+            "LOAD \"${1:filename.csv}\" INTO ${2:dataset}"
+        ],
+        "description": "Load a CSV dataset into a variable"
+    }
+}
