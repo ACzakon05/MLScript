@@ -5,16 +5,22 @@ grammar MLScript;
 // ==========
 
 // Root
-prog: (stat SEMICOLON)+ EOF ;
+prog: (stat SEMICOLON)* EOF ;
 
 // Rules
-stat: loadStat ;
+stat: loadStat | showStat ;
 
 // Command definitions
 loadStat: LOAD STRING INTO IDENTIFIER (
     (KEEP columnList) |
     (WITHOUT columnList)
 )? ;
+
+showStat: SHOW showOption ;
+
+showOption: FEATURES FROM IDENTIFIER                    # ShowFeatures
+          | COUNT OF (ROWS | FEATURES) FROM IDENTIFIER  # ShowCount
+          ;
 
 columnList: STRING (COMMA STRING)* ;
 
@@ -23,10 +29,44 @@ columnList: STRING (COMMA STRING)* ;
 // ==========
 
 // Keywords
-LOAD: 'LOAD' ;
-INTO: 'INTO' ;
-KEEP: 'KEEP' ;
-WITHOUT: 'WITHOUT' ;
+LOAD:     L O A D ;
+INTO:     I N T O ;
+SHOW:     S H O W ;
+FEATURES: F E A T U R E S ;
+FROM:     F R O M ;
+KEEP:     K E E P ;
+WITHOUT:  W I T H O U T ;
+COUNT:    C O U N T ;
+OF:       O F ;
+ROWS:     R O W S ;
+
+// Fragments for case-insensitivity
+fragment A: [aA];
+fragment B: [bB];
+fragment C: [cC];
+fragment D: [dD];
+fragment E: [eE];
+fragment F: [fF];
+fragment G: [gG];
+fragment H: [hH];
+fragment I: [iI];
+fragment J: [jJ];
+fragment K: [kK];
+fragment L: [lL];
+fragment M: [mM];
+fragment N: [nN];
+fragment O: [oO];
+fragment P: [pP];
+fragment Q: [qQ];
+fragment R: [rR];
+fragment S: [sS];
+fragment T: [tT];
+fragment U: [uU];
+fragment V: [vV];
+fragment W: [wW];
+fragment X: [xX];
+fragment Y: [yY];
+fragment Z: [zZ];
 
 // Punctuation
 COMMA: ',' ;

@@ -29,6 +29,27 @@ public:
         return visitChildren(ctx);
     }
 
+    std::any visitShowFeatures(MLScriptParser::ShowFeaturesContext *ctx) override {
+        std::string varName = ctx->IDENTIFIER()->getText();
+
+        pythonCode << "print(f'Columns in " << varName << ": {" << varName << ".columns.tolist()}')\n"; 
+
+        return visitChildren(ctx);
+    }
+
+    std::any visitShowCount(MLScriptParser::ShowCountContext *ctx) override {
+        std::string varName = ctx->IDENTIFIER()->getText();
+
+        if (ctx->FEATURES()) {
+            pythonCode << "print(f'Numer of features in " << varName << ": {len(" << varName << ".columns)}')\n";
+        } 
+        else if (ctx->ROWS()) {
+            pythonCode << "print(f'Numer of rows in " << varName << ": {len(" << varName << ")}')\n";
+        }
+
+        return visitChildren(ctx);
+    }
+
 private:
     std::string getColumnList(MLScriptParser::ColumnListContext *ctx) {
         std::string list;

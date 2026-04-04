@@ -1,0 +1,2 @@
+LOAD "examples/data/data.csv" INTO my_dataset;
+SHOW COUNT OF ROWS FROM my_dataset;
