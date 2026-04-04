@@ -5,7 +5,7 @@ grammar MLScript;
 // ==========
 
 // Root
-prog: stat+ EOF ;
+prog: (stat SEMICOLON)+ EOF ;
 
 // Rules
 stat: loadStat ;
@@ -27,7 +27,10 @@ LOAD: 'LOAD' ;
 INTO: 'INTO' ;
 KEEP: 'KEEP' ;
 WITHOUT: 'WITHOUT' ;
+
+// Punctuation
 COMMA: ',' ;
+SEMICOLON: ';' ;
 
 // Primitives
 STRING: '"' ~'"'* '"' ;

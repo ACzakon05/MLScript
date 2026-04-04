@@ -1,1 +1,1 @@
-LOAD "data/data.csv" INTO my_dataset KEEP "name"
+LOAD "data/data.csv" INTO my_dataset KEEP "name";
