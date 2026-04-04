@@ -12,11 +12,22 @@
  - `MLScript.g4` - gramatyka języka
  - `examples/` - przykładowe skrypty `.mls`
 
-## Przygotowanie środowiska
+## Szybka konfiguracja
+W pliku `build.sh` znajduje się pipeline do odpalenia wszystkich komend. Ścieżki w nim powinny się zgadzać z tymi lokalnymi
+```
+chmod +x build.sh
+./build.sh
+```
+
+## Ręczna konfiguracja
+
+### Przygotowanie środowiska
  1. Generowanie plików lexera i parsera
     ```bash
     antlr4 -Dlanguage=Cpp -visitor -no-listener -o generated MLScript.g4
     ```
+    Gdzie `antlr4='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.2-complete.jar:$CLASSPATH" org.antlr.v4.Tool'`
+
  2. Konfiguracja VS Code (opcjonalne)
  Żeby zapobiec `include error` należy dodać do `.vscode/c_cpp_properties.json` do sekcji `includePath` nastepujące katalogi:
  - `${workspaceFolder}/src/**`
@@ -25,7 +36,7 @@
  - `/usr/local/include`
  - `/usr/include`
 
-## Budowanie kompilatora
+### Budowanie kompilatora
  1. Utworzenie katalogu `build`:
     ```bash
     mkdir build && cd build
