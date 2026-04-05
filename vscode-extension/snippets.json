@@ -2,22 +2,43 @@
     "Load Dataset": {
         "prefix": "LOAD",
         "body": [
-            "LOAD \"${1:filename.csv}\" INTO ${2:dataset}"
+            "LOAD \"${1:filename.csv}\" INTO ${2:dataset};"
         ],
         "description": "Load a CSV dataset into a variable"
     },
     "Load Dataset With Specified Columns": {
         "prefix": "LOAD",
         "body": [
-            "LOAD \"${1:filename.csv}\" INTO ${2:dataset} KEEP \"${3:col1}\""
+            "LOAD \"${1:filename.csv}\" INTO ${2:dataset} KEEP \"${3:col1}\";"
         ],
         "description": "Load a CSV dataset into a variable with chosen columns only"
     },
     "Load Dataset Without Specified Columns": {
         "prefix": "LOAD",
         "body": [
-            "LOAD \"${1:filename.csv}\" INTO ${2:dataset} WITHOUT \"${3:col1}\""
+            "LOAD \"${1:filename.csv}\" INTO ${2:dataset} WITHOUT \"${3:col1}\";"
         ],
         "description": "Load a CSV dataset into a variable without chosen columns"
+    },
+    "Show Count Of Features": {
+        "prefix": "SHOW",
+        "body": [
+            "SHOW COUNT OF FEATURES FROM ${2:dataset};"
+        ],
+        "description": "Show count of all features present in specified dataset"
+    },
+    "Show Count Of Rows": {
+        "prefix": "SHOW",
+        "body": [
+            "SHOW COUNT OF ROWS FROM ${2:dataset};"
+        ],
+        "description": "Show count of all rows present in specified dataset"
+    },
+    "Show Features": {
+        "prefix": "SHOW",
+        "body": [
+            "SHOW FEATURES FROM ${2:dataset};"
+        ],
+        "description": "Show all features present in specified dataset"
     }
 }

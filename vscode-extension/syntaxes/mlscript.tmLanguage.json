@@ -14,7 +14,7 @@
             "patterns": [
                 {
                     "name": "keyword.control.mlscript",
-                    "match": "\\b(LOAD|INTO|KEEP|WITHOUT)\\b"
+                    "match": "\\b(LOAD|INTO|KEEP|WITHOUT|SHOW|COUNT|OF|ROWS|FEATURES|FROM)\\b"
                 }
             ]
         },
