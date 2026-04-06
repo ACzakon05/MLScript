@@ -50,6 +50,27 @@ public:
         return visitChildren(ctx);
     }
 
+    std::any visitShowSingleRow(MLScriptParser::ShowSingleRowContext *ctx) override {
+        std::string varName = ctx->IDENTIFIER()->getText();
+        std::string rowNumber = ctx->INTEGER()->getText();
+
+        pythonCode << "print('" << varName << " row at position " << rowNumber << ":')\n";
+        pythonCode << "print(f'{" << varName << ".iloc[" << rowNumber << "]}')\n";
+
+        return visitChildren(ctx);
+    }
+
+    std::any visitShowMultipleRows(MLScriptParser::ShowMultipleRowsContext *ctx) override {
+        std::string varName = ctx->IDENTIFIER()->getText();
+        std::string lowerBound = ctx->INTEGER(0)->getText();
+        std::string upperBound = std::to_string(std::stoi(ctx->INTEGER(1)->getText()) + 1);
+
+        pythonCode << "print('" << varName << " rows from position " << lowerBound << " to position " << upperBound << ":')\n";
+        pythonCode << "print(f'{" << varName << ".iloc[" << lowerBound << ":" << upperBound << "]}')\n";
+
+        return visitChildren(ctx);
+    }
+
 private:
     std::string getColumnList(MLScriptParser::ColumnListContext *ctx) {
         std::string list;

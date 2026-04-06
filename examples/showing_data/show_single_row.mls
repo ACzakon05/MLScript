@@ -1,0 +1,3 @@
+LOAD "examples/data/data.csv" INTO my_dataset;
+
+SHOW ROW 1 FROM my_dataset;

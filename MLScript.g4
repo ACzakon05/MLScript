@@ -20,6 +20,8 @@ showStat: SHOW showOption ;
 
 showOption: FEATURES FROM IDENTIFIER                    # ShowFeatures
           | COUNT OF (ROWS | FEATURES) FROM IDENTIFIER  # ShowCount
+          | ROW INTEGER FROM IDENTIFIER                 # ShowSingleRow
+          | ROWS INTEGER TO INTEGER FROM IDENTIFIER     # ShowMultipleRows
           ;
 
 columnList: STRING (COMMA STRING)* ;
@@ -39,6 +41,8 @@ WITHOUT:  W I T H O U T ;
 COUNT:    C O U N T ;
 OF:       O F ;
 ROWS:     R O W S ;
+ROW:      R O W ;
+TO:       T O ;
 
 // Fragments for case-insensitivity
 fragment A: [aA];
@@ -74,6 +78,7 @@ SEMICOLON: ';' ;
 
 // Primitives
 STRING: '"' ~'"'* '"' ;
+INTEGER: [1-9]*[0-9]+ ;
 
 // Identifiers
 IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* ;
