@@ -78,7 +78,7 @@ SEMICOLON: ';' ;
 
 // Primitives
 STRING: '"' ~'"'* '"' ;
-INTEGER: [1-9]*[0-9]+ ;
+INTEGER: '-'? [1-9][0-9]* ;
 
 // Identifiers
 IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* ;
