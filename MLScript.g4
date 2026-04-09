@@ -14,10 +14,17 @@ stat: loadStat
 | splitStat ;
 
 // Command definitions
-loadStat: LOAD STRING INTO IDENTIFIER (
-    (KEEP columnList) |
-    (WITHOUT columnList)
-)? ;
+loadStat: LOAD STRING (AS fileFormat)? INTO IDENTIFIER 
+    (
+      (KEEP columnList) 
+    | (WITHOUT columnList)
+    )?
+    (
+        LIMIT INTEGER
+    )?
+    ;
+
+fileFormat: CSV | SQL | JSON | PKL | HTML ;
 
 showStat: SHOW showOption ;
 
@@ -48,32 +55,41 @@ aggFunc: MEAN | MAX | MIN ;
 // ==========
 
 // Keywords
-LOAD:     L O A D ;
-INTO:     I N T O ;
-SHOW:     S H O W ;
-FEATURE:  F E A T U R E ;
-FEATURES: F E A T U R E S ;
-FROM:     F R O M ;
-KEEP:     K E E P ;
-WITHOUT:  W I T H O U T ;
-COUNT:    C O U N T ;
-OF:       O F ;
-ROWS:     R O W S ;
-ROW:      R O W ;
-TO:       T O ;
-SET:      S E T ;
-TARGET:   T A R G E T ;
-FOR:      F O R ;
-SPLIT:    S P L I T ;
-RATIO_KW: R A T I O ;
-WITH:     W I T H ;
-SEED:     S E E D ;
-SHUFFLE:  S H U F F L E ;
-TRUE:     T R U E ;
-FALSE:    F A L S E ;
-MEAN:     M E A N ;
-MAX:      M A X ;
-MIN:      M I N ;
+LOAD:        L O A D ;
+INTO:        I N T O ;
+SHOW:        S H O W ;
+FEATURE:     F E A T U R E ;
+FEATURES:    F E A T U R E S ;
+FROM:        F R O M ;
+KEEP:        K E E P ;
+WITHOUT:     W I T H O U T ;
+COUNT:       C O U N T ;
+OF:          O F ;
+ROWS:        R O W S ;
+ROW:         R O W ;
+TO:          T O ;
+SET:         S E T ;
+TARGET:      T A R G E T ;
+FOR:         F O R ;
+SPLIT:       S P L I T ;
+RATIO_KW:    R A T I O ;
+WITH:        W I T H ;
+SEED:        S E E D ;
+SHUFFLE:     S H U F F L E ;
+TRUE:        T R U E ;
+FALSE:       F A L S E ;
+MEAN:        M E A N ;
+MAX:         M A X ;
+MIN:         M I N ;
+AS:          A S ;
+DELIMITER:   D E L I M I T E R ;
+LIMIT:       L I M I T ;
+
+CSV:         C S V ;
+SQL:         S Q L ;
+JSON:        J S O N ;
+PKL:         P K L ;
+HTML:        H T M L ;
 
 // Fragments for case-insensitivity
 fragment A: [aA];

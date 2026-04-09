@@ -97,6 +97,17 @@ public:
 
 private:
     /**
+     * @brief Maps lowercase file formats from grammar to pandas equivalent.
+     */
+    std::unordered_map<std::string, std::string> fileFormatMap = {
+        {"csv", "csv"},
+        {"sql", "sql_table"},
+        {"pkl", "pickle"},
+        {"json", "json"},
+        {"html", "html"}
+    };
+
+    /**
      * @brief Maps lowercase aggregation function keywords from grammar to pandas functions.
      */
     std::unordered_map<std::string, std::string> aggFuncMap = {

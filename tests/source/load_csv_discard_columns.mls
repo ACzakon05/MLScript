@@ -1,1 +1,0 @@
-LOAD "data/data.csv" INTO my_dataset WITHOUT "surname";

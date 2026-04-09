@@ -11,15 +11,23 @@ std::any PythonGenerator::visitProg(MLScriptParser::ProgContext *ctx) {
 // == Loading Data ==
 
 std::any PythonGenerator::visitLoadStat(MLScriptParser::LoadStatContext *ctx) {
-    std::string fileName = ctx->STRING()->getText();
     std::string varName = ctx->IDENTIFIER()->getText();
+    std::string filePath = ctx->STRING()->getText();
+    std::string pandasLoadFormat = ctx->fileFormat() ? fileFormatMap.at(ctx->fileFormat()->getText()) : "csv";
 
-    pythonCode << varName << " = pd.read_csv(" << fileName << ")\n";
+    pythonCode << varName << " = " << "pd.read_" << pandasLoadFormat << "(" << filePath << ")\n";
 
     if (ctx->KEEP()) {
         pythonCode << varName << " = " << varName << "[[" << getColumnList(ctx->columnList()) << "]]\n";
-    } else if (ctx->WITHOUT()) {
-        pythonCode << varName << " = " << varName << ".drop(columns=[" << getColumnList(ctx->columnList()) << "])\n";
+    } 
+    else if (ctx->WITHOUT()) {
+        pythonCode << varName << " = " << varName << ".drop([" << getColumnList(ctx->columnList()) << "])\n";
+    }
+
+    if (ctx->LIMIT()) {
+        std::string rowsToKeep = ctx->INTEGER()->getText();
+
+        pythonCode << varName << " = " << varName << ".iloc[:" << rowsToKeep << "]\n";
     }
 
     return visitChildren(ctx);

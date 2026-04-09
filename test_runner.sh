@@ -6,8 +6,11 @@ echo "=== Running tests ==="
 passed=0
 failed=0
 
-for test_file in tests/source/*.mls; do
-    basename=$(basename "$test_file" .mls)
+for test_file in tests/source/**/*.mls; do
+    [[ -f "$test_file" ]] || continue
+
+    rel_path="${test_file#tests/source/}"
+    basename="${rel_path%.mls}"
     expected_file="tests/expected/${basename}.py"
 
     ./build/mlscript "$test_file" > /dev/null 2>&1
