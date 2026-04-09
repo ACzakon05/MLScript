@@ -1,0 +1,1 @@
+load "table.html" as html into my_dataset;

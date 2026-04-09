@@ -2,7 +2,8 @@
 
 ## LOAD - ładowanie danych
 
-* [x] komenda `LOAD` wspiera pliki `.csv`
+* [x] komenda `LOAD` wspiera pliki `.csv`, `.sql`, `.json`, `.pkl`, `.html`
+* [x] komenda `LOAD` wspiera ładowanie wybranej liczby wierszy
 * [ ] obsługa błędów dla komendy `LOAD`
 
 ## SHOW - wyświetlanie danych

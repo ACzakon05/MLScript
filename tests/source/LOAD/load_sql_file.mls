@@ -1,0 +1,1 @@
+load "table.sql" as sql into my_dataset;
