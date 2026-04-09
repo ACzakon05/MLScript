@@ -21,10 +21,13 @@ loadStat: LOAD STRING INTO IDENTIFIER (
 
 showStat: SHOW showOption ;
 
-showOption: FEATURES FROM IDENTIFIER                    # ShowFeatures
-          | COUNT OF (ROWS | FEATURES) FROM IDENTIFIER  # ShowCount
-          | ROW INTEGER FROM IDENTIFIER                 # ShowSingleRow
-          | ROWS INTEGER TO INTEGER FROM IDENTIFIER     # ShowMultipleRows
+showOption: IDENTIFIER                                                               # ShowDataset 
+          | FEATURES FROM IDENTIFIER                                                 # ShowFeatures
+          | COUNT OF (ROWS | FEATURES) FROM IDENTIFIER                               # ShowCount
+          | ROW INTEGER FROM IDENTIFIER                                              # ShowSingleRow
+          | ROWS INTEGER TO INTEGER FROM IDENTIFIER                                  # ShowMultipleRows
+          | FEATURE (STRING | INTEGER) FROM IDENTIFIER                               # ShowSingleFeature
+          | FEATURES (STRING (COMMA STRING)* | INTEGER TO INTEGER) FROM IDENTIFIER   # ShowMultipleFeatures
           ;
 
 columnList: STRING (COMMA STRING)* ;
@@ -45,6 +48,7 @@ splitStat: SPLIT IDENTIFIER RATIO_KW RATIO INTO IDENTIFIER COMMA IDENTIFIER
 LOAD:     L O A D ;
 INTO:     I N T O ;
 SHOW:     S H O W ;
+FEATURE:  F E A T U R E ;
 FEATURES: F E A T U R E S ;
 FROM:     F R O M ;
 KEEP:     K E E P ;
@@ -93,13 +97,16 @@ fragment X: [xX];
 fragment Y: [yY];
 fragment Z: [zZ];
 
+fragment DIGIT: [0-9];
+
 // Punctuation
 COMMA: ',' ;
 SEMICOLON: ';' ;
 
 // Primitives
-STRING: '"' ~'"'* '"' ;
-INTEGER: '-'? [1-9][0-9]* ;
+STRING:  '"' ~'"'* '"' ;
+INTEGER: '-'? ( '0' | [1-9] DIGIT* ) ;
+FLOAT:   INTEGER '.' DIGIT+ ; 
 
 // Identifiers
 IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* ;

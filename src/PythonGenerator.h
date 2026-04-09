@@ -31,6 +31,14 @@ public:
         return visitChildren(ctx);
     }
 
+    std::any visitShowDataset(MLScriptParser::ShowDatasetContext *ctx) override {
+        std::string varName = ctx->IDENTIFIER()->getText();
+
+        pythonCode << "print(" << varName << ")\n";
+
+        return visitChildren(ctx);
+    }
+
     std::any visitShowFeatures(MLScriptParser::ShowFeaturesContext *ctx) override {
         std::string varName = ctx->IDENTIFIER()->getText();
 
@@ -125,6 +133,22 @@ public:
 
         
       
+    std::any visitShowSingleFeature(MLScriptParser::ShowSingleFeatureContext *ctx) override {
+        std::string varName = ctx->IDENTIFIER()->getText();
+  
+        if (ctx->STRING()) {
+            std::string featureName = ctx->STRING()->getText();
+            pythonCode << "print(" << varName << "[" << featureName << "])\n";
+        } 
+        else if (ctx->INTEGER()) 
+        {
+            int featureIndex = std::stoi(ctx->INTEGER()->getText()) ;
+            pythonCode << "print(" << varName << ".iloc[: , " << featureIndex - 1 << "])\n";
+        }
+
+        return visitChildren(ctx);
+    }
+
 private:
     std::string getColumnList(MLScriptParser::ColumnListContext *ctx) {
         std::string list;

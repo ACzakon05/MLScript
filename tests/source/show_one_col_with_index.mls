@@ -1,0 +1,2 @@
+LOAD "data/data.csv" INTO my_dataset;
+SHOW FEATURE 3 FROM my_dataset;
