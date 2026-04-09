@@ -40,7 +40,7 @@ setTargetStat: SET TARGET STRING FOR IDENTIFIER;
 splitStat: SPLIT IDENTIFIER RATIO_KW RATIO INTO IDENTIFIER COMMA IDENTIFIER
            (WITH SEED INTEGER COMMA SHUFFLE (TRUE | FALSE))? ;
 
-aggFunc: MEAN ;
+aggFunc: MEAN | MAX | MIN ;
 
 
 // ==========
@@ -72,6 +72,8 @@ SHUFFLE:  S H U F F L E ;
 TRUE:     T R U E ;
 FALSE:    F A L S E ;
 MEAN:     M E A N ;
+MAX:      M A X ;
+MIN:      M I N ;
 
 // Fragments for case-insensitivity
 fragment A: [aA];

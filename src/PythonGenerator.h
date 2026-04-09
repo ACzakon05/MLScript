@@ -96,8 +96,13 @@ public:
     std::any visitSplitStat(MLScriptParser:: SplitStatContext *ctx) override;
 
 private:
+    /**
+     * @brief Maps lowercase aggregation function keywords from grammar to pandas functions.
+     */
     std::unordered_map<std::string, std::string> aggFuncMap = {
-        {"mean", "mean"}
+        {"mean", "mean"},
+        {"max", "max"},
+        {"min", "min"}
     };
 
     std::string getColumnList(MLScriptParser::ColumnListContext *ctx) {
