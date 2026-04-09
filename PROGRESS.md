@@ -12,6 +12,7 @@
 * [x] komenda `SHOW` wspiera wyświetlanie wybranych kolumn
 * [x] komenda `SHOW` wspiera wyświetlanie wybranych wierszy
 * [x] komenda `SHOW` wspiera wyświetlanie całego datasetu
+* [x] komenda `SHOW` wspiera wyświetlanie kilku kolumn datasetu
 * [ ] obłsuga błędów dla komendy `SHOW`
 
 ## SET TARGET - wybór kolumny target

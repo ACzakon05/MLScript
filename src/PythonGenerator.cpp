@@ -93,6 +93,23 @@ std::any PythonGenerator::visitShowSingleFeature(MLScriptParser::ShowSingleFeatu
     return visitChildren(ctx);
 }
 
+std::any PythonGenerator::visitShowMultipleFeatures(MLScriptParser::ShowMultipleFeaturesContext *ctx) {
+    std::string varName = ctx->IDENTIFIER()->getText();
+
+    if (ctx->columnList()) {
+        pythonCode << "print(" << varName << "[[" << getColumnList(ctx->columnList()) << "]])\n";
+    } 
+    else if (ctx->INTEGER(0) && ctx->INTEGER(1))
+    {
+        std::string lowerBound = ctx->INTEGER(0)->getText();
+        std::string upperBound = ctx->INTEGER(1)->getText();
+
+        pythonCode << "print(" << varName << ".iloc[:, " << lowerBound << ":" << upperBound << "])\n"; 
+    }
+
+    return visitChildren(ctx);
+}
+
 // == Training Preparation ==
 
 std::any PythonGenerator::visitSetTargetStat(MLScriptParser::SetTargetStatContext *ctx) {

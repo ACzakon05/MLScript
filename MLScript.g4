@@ -27,7 +27,7 @@ showOption: IDENTIFIER                                                          
           | ROW INTEGER FROM IDENTIFIER                                              # ShowSingleRow
           | ROWS INTEGER TO INTEGER FROM IDENTIFIER                                  # ShowMultipleRows
           | FEATURE (STRING | INTEGER) FROM IDENTIFIER                               # ShowSingleFeature
-          | FEATURES (STRING (COMMA STRING)* | INTEGER TO INTEGER) FROM IDENTIFIER   # ShowMultipleFeatures
+          | FEATURES (columnList | INTEGER TO INTEGER) FROM IDENTIFIER   # ShowMultipleFeatures
           ;
 
 columnList: STRING (COMMA STRING)* ;

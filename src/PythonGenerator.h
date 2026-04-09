@@ -66,6 +66,14 @@ public:
      */
     std::any visitShowSingleFeature(MLScriptParser::ShowSingleFeatureContext *ctx) override;
 
+    /**
+     * @brief Displays multiple columns by either their names or an integer range.
+     * Examples:
+     * * SHOW FEATURES "first_name", "age" FROM dataset;
+     * * SHOW FEATURES 0 TO 3 FROM dataset;
+     */
+    std::any visitShowMultipleFeatures(MLScriptParser::ShowMultipleFeaturesContext *ctx) override;
+
     // == Training Preparation ==
 
     /**

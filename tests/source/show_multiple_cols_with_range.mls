@@ -1,0 +1,2 @@
+LOAD "data/data.csv" INTO my_dataset;
+SHOW FEATURES 2 TO 5 FROM my_dataset;
