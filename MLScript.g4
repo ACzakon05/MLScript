@@ -27,7 +27,8 @@ showOption: IDENTIFIER                                                          
           | ROW INTEGER FROM IDENTIFIER                                              # ShowSingleRow
           | ROWS INTEGER TO INTEGER FROM IDENTIFIER                                  # ShowMultipleRows
           | FEATURE (STRING | INTEGER) FROM IDENTIFIER                               # ShowSingleFeature
-          | FEATURES (columnList | INTEGER TO INTEGER) FROM IDENTIFIER   # ShowMultipleFeatures
+          | FEATURES (columnList | INTEGER TO INTEGER) FROM IDENTIFIER               # ShowMultipleFeatures
+          | aggFunc OF columnList FROM IDENTIFIER                                    # ShowAggFunc
           ;
 
 columnList: STRING (COMMA STRING)* ;
@@ -38,6 +39,8 @@ setTargetStat: SET TARGET STRING FOR IDENTIFIER;
 // SPLIT dataset RATIO 80:20 INTO train_subset, test_subset WITH SEED 42, SHUFFLE true;
 splitStat: SPLIT IDENTIFIER RATIO_KW RATIO INTO IDENTIFIER COMMA IDENTIFIER
            (WITH SEED INTEGER COMMA SHUFFLE (TRUE | FALSE))? ;
+
+aggFunc: MEAN ;
 
 
 // ==========
@@ -58,16 +61,17 @@ OF:       O F ;
 ROWS:     R O W S ;
 ROW:      R O W ;
 TO:       T O ;
-SET: S E T ;
-TARGET: T A R G E T ;
-FOR: F O R ;
-SPLIT: S P L I T ;
+SET:      S E T ;
+TARGET:   T A R G E T ;
+FOR:      F O R ;
+SPLIT:    S P L I T ;
 RATIO_KW: R A T I O ;
-WITH: W I T H ;
-SEED: S E E D ;
-SHUFFLE: S H U F F L E ;
-TRUE: T R U E ;
-FALSE: F A L S E ;
+WITH:     W I T H ;
+SEED:     S E E D ;
+SHUFFLE:  S H U F F L E ;
+TRUE:     T R U E ;
+FALSE:    F A L S E ;
+MEAN:     M E A N ;
 
 // Fragments for case-insensitivity
 fragment A: [aA];

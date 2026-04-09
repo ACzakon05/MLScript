@@ -74,6 +74,12 @@ public:
      */
     std::any visitShowMultipleFeatures(MLScriptParser::ShowMultipleFeaturesContext *ctx) override;
 
+    /**
+     * @brief Displays an aggregation function result for given features.
+     * Example: SHOW AVG OF "age", "income" FROM dataset;
+     */
+    std::any visitShowAggFunc(MLScriptParser::ShowAggFuncContext *ctx) override;
+
     // == Training Preparation ==
 
     /**
@@ -90,6 +96,10 @@ public:
     std::any visitSplitStat(MLScriptParser:: SplitStatContext *ctx) override;
 
 private:
+    std::unordered_map<std::string, std::string> aggFuncMap = {
+        {"mean", "mean"}
+    };
+
     std::string getColumnList(MLScriptParser::ColumnListContext *ctx) {
         std::string list;
         auto strings = ctx->STRING();

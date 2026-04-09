@@ -110,6 +110,17 @@ std::any PythonGenerator::visitShowMultipleFeatures(MLScriptParser::ShowMultiple
     return visitChildren(ctx);
 }
 
+std::any PythonGenerator::visitShowAggFunc(MLScriptParser::ShowAggFuncContext *ctx) {
+    std::string varName = ctx->IDENTIFIER()->getText();
+    std::string aggFunc = ctx->aggFunc()->getText();
+    std::transform(aggFunc.begin(), aggFunc.end(), aggFunc.begin(), ::tolower);
+
+    pythonCode << "print(" << varName << "[[" << getColumnList(ctx->columnList()) << "]]";
+    pythonCode << ".agg(['" << aggFuncMap.at(aggFunc) << "']))\n";
+
+    return visitChildren(ctx);
+}
+
 // == Training Preparation ==
 
 std::any PythonGenerator::visitSetTargetStat(MLScriptParser::SetTargetStatContext *ctx) {
