@@ -10,144 +10,76 @@ class PythonGenerator : public MLScriptBaseVisitor {
 public:
     std::stringstream pythonCode;
 
-    std::any visitProg(MLScriptParser::ProgContext *ctx) override {
-        pythonCode << "import pandas as pd\n";
+    // == Root ==
 
-        return visitChildren(ctx);
-    }
+    /**
+     * @brief Entry point for the transpilation process.
+     * * This method initializes the Python script by adding essential imports.
+     */
+    std::any visitProg(MLScriptParser::ProgContext *ctx) override;
 
-    std::any visitLoadStat(MLScriptParser::LoadStatContext *ctx) override {
-        std::string fileName = ctx->STRING()->getText();
-        std::string varName = ctx->IDENTIFIER()->getText();
+    // == Loading Data ==
 
-        pythonCode << varName << " = pd.read_csv(" << fileName << ")\n";
+    /**
+     * @brief Transpiles the 'LOAD' statement into a Pandas read_csv call.
+     * Examples:
+     * * LOAD "data.csv" INTO dataset;
+     * * LOAD "data.csv" INTO dataset KEEP "age", "name";
+     */
+    std::any visitLoadStat(MLScriptParser::LoadStatContext *ctx) override;
 
-        if (ctx->KEEP()) {
-            pythonCode << varName << " = " << varName << "[[" << getColumnList(ctx->columnList()) << "]]\n";
-        } else if (ctx->WITHOUT()) {
-            pythonCode << varName << " = " << varName << ".drop(columns=[" << getColumnList(ctx->columnList()) << "])\n";
-        }
+    // == Data Inspection and Display ==
 
-        return visitChildren(ctx);
-    }
+    /**
+     * @brief Displays the entire dataset.
+     * Example: SHOW dataset;
+     */
+    std::any visitShowDataset(MLScriptParser::ShowDatasetContext *ctx) override;
 
-    std::any visitShowDataset(MLScriptParser::ShowDatasetContext *ctx) override {
-        std::string varName = ctx->IDENTIFIER()->getText();
+    /**
+     * @brief Lists all column names (features) in the dataset.
+     * Example: SHOW FEATURES FROM dataset;
+     */
+    std::any visitShowFeatures(MLScriptParser::ShowFeaturesContext *ctx) override;
 
-        pythonCode << "print(" << varName << ")\n";
+    /**
+     * @brief Shows the number of rows or features.
+     * Example: SHOW COUNT OF ROWS FROM dataset;
+     */
+    std::any visitShowCount(MLScriptParser::ShowCountContext *ctx) override;
 
-        return visitChildren(ctx);
-    }
+    /**
+     * @brief Displays a specific row by its integer index.
+     * Example: SHOW ROW 5 FROM dataset;
+     */
+    std::any visitShowSingleRow(MLScriptParser::ShowSingleRowContext *ctx) override;
 
-    std::any visitShowFeatures(MLScriptParser::ShowFeaturesContext *ctx) override {
-        std::string varName = ctx->IDENTIFIER()->getText();
+    /**
+     * @brief Displays a range of rows.
+     * Example: SHOW ROWS 0 TO 10 FROM dataset;
+     */
+    std::any visitShowMultipleRows(MLScriptParser::ShowMultipleRowsContext *ctx) override;
 
-        pythonCode << "print(f'Columns in " << varName << ": {" << varName << ".columns.tolist()}')\n"; 
+    /**
+     * @brief Displays a single column by name (string) or position (integer).
+     * Example: SHOW FEATURE "age" FROM dataset;
+     */
+    std::any visitShowSingleFeature(MLScriptParser::ShowSingleFeatureContext *ctx) override;
 
-        return visitChildren(ctx);
-    }
+    // == Training Preparation ==
 
-    std::any visitShowCount(MLScriptParser::ShowCountContext *ctx) override {
-        std::string varName = ctx->IDENTIFIER()->getText();
+    /**
+     * @brief Defines which feature in the dataset is the target variable.
+     * * Creates a new Python variable `{dataset}_target` to store the label series.
+     * Example: SET TARGET "age" FOR dataset; 
+     */
+    std::any visitSetTargetStat(MLScriptParser::SetTargetStatContext *ctx) override;
 
-        if (ctx->FEATURES()) {
-            pythonCode << "print(f'Numer of features in " << varName << ": {len(" << varName << ".columns)}')\n";
-        } 
-        else if (ctx->ROWS()) {
-            pythonCode << "print(f'Numer of rows in " << varName << ": {len(" << varName << ")}')\n";
-        }
-
-        return visitChildren(ctx);
-    }
-
-    std::any visitShowSingleRow(MLScriptParser::ShowSingleRowContext *ctx) override {
-        std::string varName = ctx->IDENTIFIER()->getText();
-        std::string rowNumber = ctx->INTEGER()->getText();
-
-        pythonCode << "print('" << varName << " row at position " << rowNumber << ":')\n";
-        pythonCode << "print(f'{" << varName << ".iloc[" << rowNumber << "]}')\n";
-
-        return visitChildren(ctx);
-    }
-
-    std::any visitShowMultipleRows(MLScriptParser::ShowMultipleRowsContext *ctx) override {
-        std::string varName = ctx->IDENTIFIER()->getText();
-        std::string lowerBound = ctx->INTEGER(0)->getText();
-        std::string upperBound = std::to_string(std::stoi(ctx->INTEGER(1)->getText()) + 1);
-
-        pythonCode << "print('" << varName << " rows from position " << lowerBound << " to position " << upperBound << ":')\n";
-        pythonCode << "print(f'{" << varName << ".iloc[" << lowerBound << ":" << upperBound << "]}')\n";
-
-        return visitChildren(ctx);
-    }
-
-    std::any visitSetTargetStat(MLScriptParser::SetTargetStatContext *ctx) override {
-        std::string dataSet = ctx->IDENTIFIER()->getText();
-        std::string targetCol = ctx->STRING()->getText();
-        pythonCode<< "#Set target column for " << dataSet << ": " << targetCol << "\n";
-        pythonCode << dataSet << "_target = " << dataSet << "[" << targetCol << "]\n";
-        
-        return visitChildren(ctx);
-    }   
-    //SPLIT my_dataset RATIO 80:20 INTO train_subset, test_subset WITH SEED 42, SHUFFLE true;
-    std::any visitSplitStat(MLScriptParser:: SplitStatContext *ctx) override {
-        std::string dataSet = ctx->IDENTIFIER(0)->getText();
-        std::string trainSubset = ctx->IDENTIFIER(1)->getText();
-        std::string testSubset = ctx->IDENTIFIER(2)->getText();
-
-        std::string ratioText = ctx->RATIO()->getText();
-        size_t colonPos = ratioText.find(':');
-        std::string trainRatio = ratioText.substr(0, colonPos);
-        std::string testRatio = ratioText.substr(colonPos + 1);
-        double testSize = std::stod(testRatio) / (std::stod(trainRatio) + std::stod(testRatio));
-
-        // Opcjonalne seed ii shufle
-
-        int seed =0;
-        std::string shuffle = "True";
-        if (ctx->SEED() && ctx->INTEGER()) {
-            seed = std::stoi(ctx->INTEGER()->getText());
-        }
-
-        // obsługa TRUE / FALSE
-        if (ctx->TRUE()) {
-            shuffle = "True";
-        } else if (ctx->FALSE()) {
-            shuffle = "False";
-        }
-        
-        pythonCode << "# Split dataset into train and test\n";
-        pythonCode << "from sklearn.model_selection import train_test_split\n";
-        pythonCode << trainSubset << ", " << testSubset << ", " 
-               << trainSubset << "_target, " << testSubset << "_target = train_test_split(\n";
-        pythonCode << "    " << dataSet << ".drop(columns=[" << dataSet << "_target.name]),\n";
-        pythonCode << "    " << dataSet << "_target,\n";
-        pythonCode << "    test_size=" << testSize << ",\n";
-        pythonCode << "    random_state=" << seed << ",\n";
-        pythonCode << "    shuffle=" << shuffle << "\n";
-        pythonCode << ")\n";
-
-        return visitChildren(ctx);
-    }
-
-
-        
-      
-    std::any visitShowSingleFeature(MLScriptParser::ShowSingleFeatureContext *ctx) override {
-        std::string varName = ctx->IDENTIFIER()->getText();
-  
-        if (ctx->STRING()) {
-            std::string featureName = ctx->STRING()->getText();
-            pythonCode << "print(" << varName << "[" << featureName << "])\n";
-        } 
-        else if (ctx->INTEGER()) 
-        {
-            int featureIndex = std::stoi(ctx->INTEGER()->getText()) ;
-            pythonCode << "print(" << varName << ".iloc[: , " << featureIndex - 1 << "])\n";
-        }
-
-        return visitChildren(ctx);
-    }
+    /**
+     * @brief Splits a dataset and its target into training and testing subsets.
+     * Example: SPLIT my_dataset RATIO 80:20 INTO train_subset, test_subset WITH SEED 42, SHUFFLE true;
+     */
+    std::any visitSplitStat(MLScriptParser:: SplitStatContext *ctx) override;
 
 private:
     std::string getColumnList(MLScriptParser::ColumnListContext *ctx) {
