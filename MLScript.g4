@@ -8,7 +8,10 @@ grammar MLScript;
 prog: (stat SEMICOLON)* EOF ;
 
 // Rules
-stat: loadStat | showStat ;
+stat: loadStat 
+| showStat
+| setTargetStat
+| splitStat ;
 
 // Command definitions
 loadStat: LOAD STRING INTO IDENTIFIER (
@@ -25,6 +28,14 @@ showOption: FEATURES FROM IDENTIFIER                    # ShowFeatures
           ;
 
 columnList: STRING (COMMA STRING)* ;
+
+//SET TARGET "kolumna" FOR dataset;
+setTargetStat: SET TARGET STRING FOR IDENTIFIER;
+
+// SPLIT dataset RATIO 80:20 INTO train_subset, test_subset WITH SEED 42, SHUFFLE true;
+splitStat: SPLIT IDENTIFIER RATIO_KW RATIO INTO IDENTIFIER COMMA IDENTIFIER
+           (WITH SEED INTEGER COMMA SHUFFLE (TRUE | FALSE))? ;
+
 
 // ==========
 // Lexer
@@ -43,6 +54,16 @@ OF:       O F ;
 ROWS:     R O W S ;
 ROW:      R O W ;
 TO:       T O ;
+SET: S E T ;
+TARGET: T A R G E T ;
+FOR: F O R ;
+SPLIT: S P L I T ;
+RATIO_KW: R A T I O ;
+WITH: W I T H ;
+SEED: S E E D ;
+SHUFFLE: S H U F F L E ;
+TRUE: T R U E ;
+FALSE: F A L S E ;
 
 // Fragments for case-insensitivity
 fragment A: [aA];
@@ -86,3 +107,6 @@ IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* ;
 // Ignore
 WS: [ \t\r\n]+ -> skip ;
 COMMENT: '#' ~[\r\n]* -> skip ;
+
+//Helper Tokens
+RATIO: INTEGER ':' INTEGER ;

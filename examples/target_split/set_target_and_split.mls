@@ -1,0 +1,3 @@
+LOAD "data/data1.csv" INTO df;
+SET TARGET "price" FOR df;
+SPLIT df RATIO 80:20 INTO train_set, test_set WITH SEED 42, SHUFFLE true;
