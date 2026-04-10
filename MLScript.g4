@@ -14,17 +14,18 @@ stat: loadStat
 | splitStat ;
 
 // Command definitions
-loadStat: LOAD STRING (AS fileFormat)? INTO IDENTIFIER 
-    (
-      (KEEP columnList) 
-    | (WITHOUT columnList)
-    )?
-    (
-        LIMIT INTEGER
-    )?
-    ;
+loadStat: LOAD STRING AS fileFormatLoadOptions INTO IDENTIFIER generalLoadOptions;
 
-fileFormat: CSV | SQL | JSON | PKL | HTML ;
+fileFormatLoadOptions: 
+                       CSV csvLoadOptions     # LoadCSVFile
+                     | SQL                    # LoadSQLFile
+                     | JSON                   # LoadJSONFile 
+                     | PKL                    # LoadPKLFile
+                     ;
+         
+csvLoadOptions: (DELIMITED BY STRING)? (KEEP HEADER | WITHOUT HEADER)? ;
+
+generalLoadOptions: (KEEP columnList)? (WITHOUT columnList)? (LIMIT INTEGER)?;
 
 showStat: SHOW showOption ;
 
@@ -82,8 +83,10 @@ MEAN:        M E A N ;
 MAX:         M A X ;
 MIN:         M I N ;
 AS:          A S ;
-DELIMITER:   D E L I M I T E R ;
+DELIMITED:   D E L I M I T E D ;
 LIMIT:       L I M I T ;
+BY:          B Y ;
+HEADER:      H E A D E R ;
 
 CSV:         C S V ;
 SQL:         S Q L ;

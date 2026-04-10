@@ -1,0 +1,1 @@
+LOAD "data/csv" AS CSV INTO my_dataset;

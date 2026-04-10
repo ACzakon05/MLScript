@@ -4,7 +4,28 @@
 #include <string>
 #include <iostream>
 
+/**
+ * @brief Enum with all file extensions available in MLScript.
+ */
+enum fileExtension {
+    CSV,
+    SQL,
+    JSON,
+    PKL
+};
 
+/**
+ * @brief Stores load options for LOAD command.
+ */
+struct LoadConfig {
+    std::string filePath;
+    fileExtension fileFormat = fileExtension::CSV;
+    std::string delimiter;
+    std::string headerOption;
+    std::string columnsToKeep;
+    std::string columnsToDiscard;
+    std::string nrows;
+};
 
 class PythonGenerator : public MLScriptBaseVisitor {
 public:
@@ -27,6 +48,16 @@ public:
      * * LOAD "data.csv" INTO dataset KEEP "age", "name";
      */
     std::any visitLoadStat(MLScriptParser::LoadStatContext *ctx) override;
+
+    /**
+     * @brief Reads general load options.
+     */
+    std::any visitGeneralLoadOptions(MLScriptParser::GeneralLoadOptionsContext *ctx) override;
+
+    /**
+     * @brief Reads load options for CSV files.
+     */
+    std::any visitLoadCSVFile(MLScriptParser::LoadCSVFileContext *ctx) override;
 
     // == Data Inspection and Display ==
 
@@ -96,6 +127,11 @@ public:
     std::any visitSplitStat(MLScriptParser:: SplitStatContext *ctx) override;
 
 private:
+    /**
+     * @brief Stores options to use when loading files via LOAD command.
+     */
+    LoadConfig loadConfig;
+
     /**
      * @brief Maps lowercase file formats from grammar to pandas equivalent.
      */

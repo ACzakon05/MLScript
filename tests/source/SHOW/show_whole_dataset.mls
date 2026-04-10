@@ -1,2 +1,2 @@
-LOAD "data/data.csv" INTO my_dataset;
+LOAD "data.csv" INTO my_dataset;
 SHOW my_dataset;

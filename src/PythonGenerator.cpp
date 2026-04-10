@@ -13,24 +13,88 @@ std::any PythonGenerator::visitProg(MLScriptParser::ProgContext *ctx) {
 std::any PythonGenerator::visitLoadStat(MLScriptParser::LoadStatContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
     std::string filePath = ctx->STRING()->getText();
-    std::string pandasLoadFormat = ctx->fileFormat() ? fileFormatMap.at(ctx->fileFormat()->getText()) : "csv";
+    std::stringstream loadOptions;
 
-    pythonCode << varName << " = " << "pd.read_" << pandasLoadFormat << "(" << filePath << ")\n";
+    visit(ctx->fileFormatLoadOptions());
+
+    pythonCode << varName << " = " << "pd.read_";
+
+    switch (loadConfig.fileFormat)
+    {
+    case fileExtension::CSV:
+        loadOptions << "csv(\n";
+        loadOptions << "\tfilepath_or_buffer=" << filePath << ",\n";
+        loadOptions << "\tdelimiter=\"" << loadConfig.delimiter << "\",\n";
+        loadOptions << "\theader=\"" << loadConfig.headerOption << "\"\n";
+        loadOptions << ")\n";
+        break;
+    default:
+        break;
+    }
+
+    pythonCode << loadOptions.str();
+
+    visit(ctx->generalLoadOptions());
+
+    if (!loadConfig.columnsToKeep.empty()) {
+        pythonCode << varName << " = " << varName << "[[" << loadConfig.columnsToKeep << "]]\n";
+    }
+    if (!loadConfig.columnsToDiscard.empty()) {
+        pythonCode << varName << " = " << varName << ".drop(columns=[" << loadConfig.columnsToDiscard << "])\n";
+    }
+    if (!loadConfig.nrows.empty()) {
+        pythonCode << varName << " = " << varName << ".iloc[:" << loadConfig.nrows << "]\n";
+    }
+    
+    return {};
+}
+
+std::any PythonGenerator::visitGeneralLoadOptions(MLScriptParser::GeneralLoadOptionsContext *ctx) {
+    int columnListIndex = 0;
 
     if (ctx->KEEP()) {
-        pythonCode << varName << " = " << varName << "[[" << getColumnList(ctx->columnList()) << "]]\n";
-    } 
-    else if (ctx->WITHOUT()) {
-        pythonCode << varName << " = " << varName << ".drop([" << getColumnList(ctx->columnList()) << "])\n";
+        loadConfig.columnsToKeep = getColumnList(ctx->columnList(columnListIndex));
+        columnListIndex++;
     }
-
+    if (ctx->WITHOUT()) {
+        loadConfig.columnsToDiscard = getColumnList(ctx->columnList(columnListIndex));
+        columnListIndex++;
+    }
     if (ctx->LIMIT()) {
-        std::string rowsToKeep = ctx->INTEGER()->getText();
-
-        pythonCode << varName << " = " << varName << ".iloc[:" << rowsToKeep << "]\n";
+        loadConfig.nrows = ctx->INTEGER()->getText();
     }
 
-    return visitChildren(ctx);
+    return {};
+}
+
+std::any PythonGenerator::visitLoadCSVFile(MLScriptParser::LoadCSVFileContext *ctx) {
+    std::string delimiter = ",";
+    std::string keepHeader = "infer";
+
+    if (ctx->csvLoadOptions()->DELIMITED()) {
+        std::string rawDelimiter = ctx->csvLoadOptions()->STRING()->getText();
+
+        if (rawDelimiter.length() >= 2 &&
+           (rawDelimiter.front() == '\'' || rawDelimiter.front() == '"')) 
+        {
+            delimiter = rawDelimiter.substr(1, rawDelimiter.length() - 2);
+        } 
+        else 
+        {
+            delimiter = ctx->csvLoadOptions()->STRING()->getText();
+        }
+    }
+    if (ctx->csvLoadOptions()->HEADER()) {
+        if (ctx->csvLoadOptions()->WITHOUT()) {
+            keepHeader = "1";
+        }
+    }
+
+    loadConfig.delimiter = delimiter;
+    loadConfig.headerOption = keepHeader;
+    loadConfig.fileFormat = fileExtension::CSV;
+
+    return {};
 }
 
 // == Data Inspection and Display ==
