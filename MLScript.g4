@@ -28,7 +28,7 @@ jsonLoadOptions: (ORIENT STRING)?;
 
 generalLoadOptions: (KEEP columnList)? (WITHOUT columnList)? (LIMIT INTEGER)?;
 
-showStat: SHOW showOption ;
+showStat: SHOW showOption whereClause?;
 
 showOption: IDENTIFIER                                                               # ShowDataset 
           | FEATURES FROM IDENTIFIER                                                 # ShowFeatures
@@ -39,6 +39,26 @@ showOption: IDENTIFIER                                                          
           | FEATURES (columnList | INTEGER TO INTEGER) FROM IDENTIFIER               # ShowMultipleFeatures
           | aggFunc OF columnList FROM IDENTIFIER                                    # ShowAggFunc
           ;
+
+whereClause: WHERE condition;
+
+condition: LPAREN condition RPAREN                                                   # NestedCondition
+         | NOT condition                                                             # NotCondition
+         | left=condition logicalOperator right=condition                            # LogicalCondition
+         | expression comparisonOperator expression                                  # RelationalCondition
+         ;
+
+expression: STRING                                                                   # ColumnReference
+          | literal                                                                  # LiteralValue
+          ;
+
+literal: INTEGER
+       | STRING
+       | TRUE
+       | FALSE
+       ;
+
+logicalOperator: AND | OR ;
 
 columnList: STRING (COMMA STRING)* ;
 
@@ -89,6 +109,10 @@ LIMIT:       L I M I T ;
 BY:          B Y ;
 HEADER:      H E A D E R ;
 ORIENT:      O R I E N T ;
+WHERE:       W H E R E ;
+NOT:         N O T ;
+AND:         A N D ;
+OR:          O R ;
 
 CSV:         C S V ;
 SQL:         S Q L ;
@@ -129,6 +153,8 @@ fragment DIGIT: [0-9];
 // Punctuation
 COMMA: ',' ;
 SEMICOLON: ';' ;
+LPAREN: '(' ;
+RPAREN: ')' ;
 
 // Primitives
 STRING:  '"' ~'"'* '"' ;
@@ -144,3 +170,6 @@ COMMENT: '#' ~[\r\n]* -> skip ;
 
 //Helper Tokens
 RATIO: INTEGER ':' INTEGER ;
+
+// Operators
+comparisonOperator: '=' | '!=' | '>' | '<' | '>=' | '<=' ;

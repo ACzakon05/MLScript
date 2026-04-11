@@ -137,6 +137,14 @@ public:
      */
     std::any visitSplitStat(MLScriptParser:: SplitStatContext *ctx) override;
 
+    // == Conditions ==
+
+    /**
+     * @brief Visits NOT alternative of the WHERE clause.
+     * @return string
+     */
+    std::any visitNotCondition(MLScriptParser::NotConditionContext *ctx) override;
+
 private:
     /**
      * @brief Stores options to use when loading files via LOAD command.
