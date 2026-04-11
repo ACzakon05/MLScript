@@ -25,6 +25,7 @@ struct LoadConfig {
     std::string columnsToKeep;
     std::string columnsToDiscard;
     std::string nrows;
+    std::string orient;
 };
 
 class PythonGenerator : public MLScriptBaseVisitor {
@@ -58,6 +59,11 @@ public:
      * @brief Reads load options for CSV files.
      */
     std::any visitLoadCSVFile(MLScriptParser::LoadCSVFileContext *ctx) override;
+
+    /**
+     * @brief Reads load options for JSON files.
+     */
+    std::any visitLoadJSONFile(MLScriptParser::LoadJSONFileContext *ctx) override;
 
     // == Data Inspection and Display ==
 

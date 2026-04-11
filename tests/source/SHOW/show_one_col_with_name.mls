@@ -1,2 +1,2 @@
-LOAD "data.csv" INTO my_dataset;
+LOAD "data.csv" AS CSV INTO my_dataset;
 SHOW FEATURE "first_name" FROM my_dataset;

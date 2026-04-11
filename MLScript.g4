@@ -19,11 +19,12 @@ loadStat: LOAD STRING AS fileFormatLoadOptions INTO IDENTIFIER generalLoadOption
 fileFormatLoadOptions: 
                        CSV csvLoadOptions     # LoadCSVFile
                      | SQL                    # LoadSQLFile
-                     | JSON                   # LoadJSONFile 
+                     | JSON jsonLoadOptions   # LoadJSONFile 
                      | PKL                    # LoadPKLFile
                      ;
          
 csvLoadOptions: (DELIMITED BY STRING)? (KEEP HEADER | WITHOUT HEADER)? ;
+jsonLoadOptions: (ORIENT STRING)?;
 
 generalLoadOptions: (KEEP columnList)? (WITHOUT columnList)? (LIMIT INTEGER)?;
 
@@ -87,6 +88,7 @@ DELIMITED:   D E L I M I T E D ;
 LIMIT:       L I M I T ;
 BY:          B Y ;
 HEADER:      H E A D E R ;
+ORIENT:      O R I E N T ;
 
 CSV:         C S V ;
 SQL:         S Q L ;

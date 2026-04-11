@@ -28,6 +28,11 @@ std::any PythonGenerator::visitLoadStat(MLScriptParser::LoadStatContext *ctx) {
         loadOptions << "\theader=\"" << loadConfig.headerOption << "\"\n";
         loadOptions << ")\n";
         break;
+    case fileExtension::JSON:
+        loadOptions << "json(\n";
+        loadOptions << "\tpath_or_buf=" << filePath << ",\n";
+        loadOptions << "\torient=" << loadConfig.orient << "\n";
+        loadOptions << ")\n";
     default:
         break;
     }
@@ -93,6 +98,19 @@ std::any PythonGenerator::visitLoadCSVFile(MLScriptParser::LoadCSVFileContext *c
     loadConfig.delimiter = delimiter;
     loadConfig.headerOption = keepHeader;
     loadConfig.fileFormat = fileExtension::CSV;
+
+    return {};
+}
+
+std::any PythonGenerator::visitLoadJSONFile(MLScriptParser::LoadJSONFileContext *ctx) {
+    std::string orient = "None";
+
+    if (ctx->jsonLoadOptions()->ORIENT()) {
+        orient = ctx->jsonLoadOptions()->STRING()->getText();
+    }
+
+    loadConfig.orient = orient;
+    loadConfig.fileFormat = fileExtension::JSON;
 
     return {};
 }
