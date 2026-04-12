@@ -1,0 +1,2 @@
+LOAD 'data.csv' AS CSV INTO my_dataset;
+SHOW ROWS 0 TO 5 FROM my_dataset WHERE NOT ("status" = 'inactive' OR "price" < 100);

@@ -21,3 +21,21 @@ std::string PythonGenerator::getColumnList(MLScriptParser::ColumnListContext *ct
     
     return list;
 }
+
+std::string PythonGenerator::applyWhereConditions(MLScriptParser::WhereClauseContext *ctx) {
+    if (!ctx) {
+        return "";
+    }
+    
+    std::any pandasWhereConditions = visit(ctx->condition());
+
+    if (pandasWhereConditions.has_value()) {
+        std::string pandasWhereConditionsString = std::any_cast<std::string>(pandasWhereConditions);
+
+        if (!pandasWhereConditionsString.empty()) {
+            return std::string(".where(" + pandasWhereConditionsString + ")");
+        }
+    }
+
+    return "";
+}

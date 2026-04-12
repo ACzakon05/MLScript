@@ -51,18 +51,18 @@ generalLoadOptions
 // --------------------------------------------------
 
 showStat
-       : SHOW showOption whereClause?
+       : SHOW showOption
        ;
 
 showOption
-       : IDENTIFIER                                                               # ShowDataset 
+       : IDENTIFIER whereClause?                                                  # ShowDataset 
        | FEATURES FROM IDENTIFIER                                                 # ShowFeatures
        | COUNT OF (ROWS | FEATURES) FROM IDENTIFIER                               # ShowCount
        | ROW INTEGER FROM IDENTIFIER                                              # ShowSingleRow
-       | ROWS INTEGER TO INTEGER FROM IDENTIFIER                                  # ShowMultipleRows
-       | FEATURE (STRING | INTEGER) FROM IDENTIFIER                               # ShowSingleFeature
+       | ROWS INTEGER TO INTEGER FROM IDENTIFIER whereClause?                     # ShowMultipleRows
+       | FEATURE (COL_NAME | INTEGER) FROM IDENTIFIER                             # ShowSingleFeature
        | FEATURES (columnList | INTEGER TO INTEGER) FROM IDENTIFIER               # ShowMultipleFeatures
-       | aggFunc OF columnList FROM IDENTIFIER                                    # ShowAggFunc
+       | aggFunc OF columnList FROM IDENTIFIER whereClause?                       # ShowAggFunc
        ;
 
 whereClause

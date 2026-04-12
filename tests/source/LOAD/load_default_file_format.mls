@@ -1,1 +1,1 @@
-load "data.csv" into my_dataset;
+load 'data.csv' into my_dataset;

@@ -202,6 +202,11 @@ private:
     LoadConfig loadConfig;
 
     /**
+     * @brief Stores currently processed identifier;
+     */
+    std::string currentVarName;
+
+    /**
      * @brief Maps lowercase file formats from grammar to pandas equivalent.
      */
     std::unordered_map<std::string, std::string> fileFormatMap = {
@@ -227,7 +232,7 @@ private:
     std::string getColumnList(MLScriptParser::ColumnListContext *ctx);
 
     /**
-     * @brief Stores currently processed identifier;
+     * @brief Returns a .where Pandas statement if applicable;
      */
-    std::string currentVarName;
+    std::string applyWhereConditions(MLScriptParser::WhereClauseContext *ctx);
 };

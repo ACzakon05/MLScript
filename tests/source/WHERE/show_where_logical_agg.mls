@@ -1,0 +1,2 @@
+LOAD 'data.csv' AS CSV INTO my_dataset;
+SHOW MEAN OF "price" FROM my_dataset WHERE "category" = 'Electronics' AND "stock" >= 10;

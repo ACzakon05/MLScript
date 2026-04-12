@@ -1,4 +1,4 @@
-LOAD "data.csv" AS CSV INTO my_dataset;
+LOAD 'data.csv' AS CSV INTO my_dataset;
 SHOW MEAN OF "price" FROM my_dataset;
 SHOW MAX OF "price" FROM my_dataset;
 SHOW MIN OF "price" FROM my_dataset;
