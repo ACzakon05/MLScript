@@ -1,82 +1,138 @@
 grammar MLScript;
 
-// ==========
-// Parser
-// ==========
+// ==================================================
+// Parser Rules
+// ==================================================
 
-// Root
-prog: (stat SEMICOLON)* EOF ;
+// --------------------------------------------------
+// Entry point
+// --------------------------------------------------
 
-// Rules
-stat: loadStat 
-| showStat
-| setTargetStat
-| splitStat ;
+prog
+       : statement (SEMICOLON statement)* SEMICOLON? EOF
+       ;
 
-// Command definitions
-loadStat: LOAD STRING AS fileFormatLoadOptions INTO IDENTIFIER generalLoadOptions;
+statement
+       : loadStat 
+       | showStat
+       | setTargetStat
+       | splitStat
+       ;
 
-fileFormatLoadOptions: 
-                       CSV csvLoadOptions     # LoadCSVFile
-                     | SQL                    # LoadSQLFile
-                     | JSON jsonLoadOptions   # LoadJSONFile 
-                     | PKL                    # LoadPKLFile
-                     ;
+// --------------------------------------------------
+// LOAD command
+// --------------------------------------------------
+
+loadStat
+       : LOAD STRING AS fileFormatLoadOptions INTO IDENTIFIER generalLoadOptions
+       ;
+
+fileFormatLoadOptions
+       : CSV csvLoadOptions     # LoadCSVFile
+       | SQL                    # LoadSQLFile
+       | JSON jsonLoadOptions   # LoadJSONFile 
+       | PKL                    # LoadPKLFile
+       ;
          
-csvLoadOptions: (DELIMITED BY STRING)? (KEEP HEADER | WITHOUT HEADER)? ;
-jsonLoadOptions: (ORIENT STRING)?;
+csvLoadOptions
+       : (DELIMITED BY STRING)? (KEEP HEADER | WITHOUT HEADER)? 
+       ;
 
-generalLoadOptions: (KEEP columnList)? (WITHOUT columnList)? (LIMIT INTEGER)?;
+jsonLoadOptions
+       : (ORIENT STRING)?
+       ;
 
-showStat: SHOW showOption whereClause?;
+generalLoadOptions
+       : (KEEP columnList)? (WITHOUT columnList)? (LIMIT INTEGER)?
+       ;
 
-showOption: IDENTIFIER                                                               # ShowDataset 
-          | FEATURES FROM IDENTIFIER                                                 # ShowFeatures
-          | COUNT OF (ROWS | FEATURES) FROM IDENTIFIER                               # ShowCount
-          | ROW INTEGER FROM IDENTIFIER                                              # ShowSingleRow
-          | ROWS INTEGER TO INTEGER FROM IDENTIFIER                                  # ShowMultipleRows
-          | FEATURE (STRING | INTEGER) FROM IDENTIFIER                               # ShowSingleFeature
-          | FEATURES (columnList | INTEGER TO INTEGER) FROM IDENTIFIER               # ShowMultipleFeatures
-          | aggFunc OF columnList FROM IDENTIFIER                                    # ShowAggFunc
-          ;
+// --------------------------------------------------
+// SHOW command
+// --------------------------------------------------
 
-whereClause: WHERE condition;
+showStat
+       : SHOW showOption whereClause?
+       ;
 
-condition: LPAREN condition RPAREN                                                   # NestedCondition
-         | NOT condition                                                             # NotCondition
-         | left=condition logicalOperator right=condition                            # LogicalCondition
-         | expression comparisonOperator expression                                  # RelationalCondition
-         ;
+showOption
+       : IDENTIFIER                                                               # ShowDataset 
+       | FEATURES FROM IDENTIFIER                                                 # ShowFeatures
+       | COUNT OF (ROWS | FEATURES) FROM IDENTIFIER                               # ShowCount
+       | ROW INTEGER FROM IDENTIFIER                                              # ShowSingleRow
+       | ROWS INTEGER TO INTEGER FROM IDENTIFIER                                  # ShowMultipleRows
+       | FEATURE (STRING | INTEGER) FROM IDENTIFIER                               # ShowSingleFeature
+       | FEATURES (columnList | INTEGER TO INTEGER) FROM IDENTIFIER               # ShowMultipleFeatures
+       | aggFunc OF columnList FROM IDENTIFIER                                    # ShowAggFunc
+       ;
 
-expression: STRING                                                                   # ColumnReference
-          | literal                                                                  # LiteralValue
-          ;
+whereClause
+       : WHERE condition
+       ;
 
-literal: INTEGER
+condition
+       : LPAREN condition RPAREN                                                   # NestedCondition
+       | NOT condition                                                             # NotCondition
+       | left=condition logicalOperator right=condition                            # LogicalCondition
+       | expression comparisonOperator expression                                  # RelationalCondition
+       ;
+
+expression
+       : STRING                                                                   # ColumnReference
+       | literal                                                                  # LiteralValue
+       ;
+
+literal
+       : INTEGER
        | STRING
        | TRUE
        | FALSE
        ;
 
-logicalOperator: AND | OR ;
+// --------------------------------------------------
+// SET TARGET command
+// --------------------------------------------------
 
-columnList: STRING (COMMA STRING)* ;
+setTargetStat
+       : SET TARGET STRING FOR IDENTIFIER
+       ;
 
-//SET TARGET "kolumna" FOR dataset;
-setTargetStat: SET TARGET STRING FOR IDENTIFIER;
+// --------------------------------------------------
+// SPLIT command
+// --------------------------------------------------
 
-// SPLIT dataset RATIO 80:20 INTO train_subset, test_subset WITH SEED 42, SHUFFLE true;
-splitStat: SPLIT IDENTIFIER RATIO_KW RATIO INTO IDENTIFIER COMMA IDENTIFIER
-           (WITH SEED INTEGER COMMA SHUFFLE (TRUE | FALSE))? ;
+splitStat
+       : SPLIT IDENTIFIER RATIO_KW RATIO INTO IDENTIFIER COMMA IDENTIFIER
+         (WITH SEED INTEGER COMMA SHUFFLE (TRUE | FALSE))? 
+       ;
 
-aggFunc: MEAN | MAX | MIN ;
+// --------------------------------------------------
+// Shared
+// --------------------------------------------------
 
+columnList
+       : STRING (COMMA STRING)* 
+       ;
 
-// ==========
-// Lexer
-// ==========
+aggFunc
+       : MEAN | MAX | MIN 
+       ;
 
+logicalOperator
+       : AND | OR 
+       ;
+
+comparisonOperator
+       : '=' | '!=' | '>' | '<' | '>=' | '<='
+       ;
+
+// ==================================================
+// Lexer Rules
+// ==================================================
+
+// --------------------------------------------------
 // Keywords
+// --------------------------------------------------
+
 LOAD:        L O A D ;
 INTO:        I N T O ;
 SHOW:        S H O W ;
@@ -114,13 +170,48 @@ NOT:         N O T ;
 AND:         A N D ;
 OR:          O R ;
 
+// --------------------------------------------------
+// Format keywords
+// --------------------------------------------------
+
 CSV:         C S V ;
 SQL:         S Q L ;
 JSON:        J S O N ;
 PKL:         P K L ;
 HTML:        H T M L ;
 
-// Fragments for case-insensitivity
+// --------------------------------------------------
+// Punctuation
+// --------------------------------------------------
+
+COMMA: ',' ;
+SEMICOLON: ';' ;
+LPAREN: '(' ;
+RPAREN: ')' ;
+
+// --------------------------------------------------
+// Literals
+// --------------------------------------------------
+
+STRING:  '"' ~'"'* '"' ;
+INTEGER: '-'? ( '0' | [1-9] DIGIT* ) ;
+FLOAT:   INTEGER '.' DIGIT+ ; 
+IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* ;
+RATIO: INTEGER ':' INTEGER ;
+
+// --------------------------------------------------
+// Skipped
+// --------------------------------------------------
+
+WS: [ \t\r\n]+ -> skip ;
+COMMENT: '#' ~[\r\n]* -> skip ;
+
+// --------------------------------------------------
+// Fragments
+// --------------------------------------------------
+
+fragment DIGIT: [0-9];
+
 fragment A: [aA];
 fragment B: [bB];
 fragment C: [cC];
@@ -147,29 +238,3 @@ fragment W: [wW];
 fragment X: [xX];
 fragment Y: [yY];
 fragment Z: [zZ];
-
-fragment DIGIT: [0-9];
-
-// Punctuation
-COMMA: ',' ;
-SEMICOLON: ';' ;
-LPAREN: '(' ;
-RPAREN: ')' ;
-
-// Primitives
-STRING:  '"' ~'"'* '"' ;
-INTEGER: '-'? ( '0' | [1-9] DIGIT* ) ;
-FLOAT:   INTEGER '.' DIGIT+ ; 
-
-// Identifiers
-IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* ;
-
-// Ignore
-WS: [ \t\r\n]+ -> skip ;
-COMMENT: '#' ~[\r\n]* -> skip ;
-
-//Helper Tokens
-RATIO: INTEGER ':' INTEGER ;
-
-// Operators
-comparisonOperator: '=' | '!=' | '>' | '<' | '>=' | '<=' ;
