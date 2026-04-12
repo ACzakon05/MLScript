@@ -1,7 +1,24 @@
 #include "PythonGenerator.h"
 
+std::any PythonGenerator::visitShowStat(MLScriptParser::ShowStatContext *ctx) {
+    std::string whereClauseConditions;
+
+    visit(ctx->showOption());
+
+    if (ctx->whereClause()) {
+        whereClauseConditions = std::any_cast<std::string>(visit(ctx->whereClause()));
+    }
+
+    if (!whereClauseConditions.empty()) {
+        pythonCode << "\n\n" << whereClauseConditions << "\n\n";
+    }
+
+    return {};
+}
+
 std::any PythonGenerator::visitShowDataset(MLScriptParser::ShowDatasetContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
+    currentVarName = varName;
 
     pythonCode << "print(" << varName << ")\n";
 
@@ -10,6 +27,7 @@ std::any PythonGenerator::visitShowDataset(MLScriptParser::ShowDatasetContext *c
 
 std::any PythonGenerator::visitShowFeatures(MLScriptParser::ShowFeaturesContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
+    currentVarName = varName;
 
     pythonCode << "print(f'Columns in " << varName << ": {" << varName << ".columns.tolist()}')\n"; 
 
@@ -18,6 +36,7 @@ std::any PythonGenerator::visitShowFeatures(MLScriptParser::ShowFeaturesContext 
 
 std::any PythonGenerator::visitShowCount(MLScriptParser::ShowCountContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
+    currentVarName = varName;
 
     if (ctx->FEATURES()) {
         pythonCode << "print(f'Numer of features in " << varName << ": {len(" << varName << ".columns)}')\n";
@@ -31,6 +50,7 @@ std::any PythonGenerator::visitShowCount(MLScriptParser::ShowCountContext *ctx) 
 
 std::any PythonGenerator::visitShowSingleRow(MLScriptParser::ShowSingleRowContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
+    currentVarName = varName;
     std::string rowNumber = ctx->INTEGER()->getText();
 
     pythonCode << "print('" << varName << " row at position " << rowNumber << ":')\n";
@@ -41,6 +61,7 @@ std::any PythonGenerator::visitShowSingleRow(MLScriptParser::ShowSingleRowContex
 
 std::any PythonGenerator::visitShowMultipleRows(MLScriptParser::ShowMultipleRowsContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
+    currentVarName = varName;
     std::string lowerBound = ctx->INTEGER(0)->getText();
     std::string upperBound = std::to_string(std::stoi(ctx->INTEGER(1)->getText()) + 1);
 
@@ -52,6 +73,7 @@ std::any PythonGenerator::visitShowMultipleRows(MLScriptParser::ShowMultipleRows
 
 std::any PythonGenerator::visitShowSingleFeature(MLScriptParser::ShowSingleFeatureContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
+    currentVarName = varName;
 
     if (ctx->STRING()) {
         std::string featureName = ctx->STRING()->getText();
@@ -68,6 +90,7 @@ std::any PythonGenerator::visitShowSingleFeature(MLScriptParser::ShowSingleFeatu
 
 std::any PythonGenerator::visitShowMultipleFeatures(MLScriptParser::ShowMultipleFeaturesContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
+    currentVarName = varName;
 
     if (ctx->columnList()) {
         pythonCode << "print(" << varName << "[[" << getColumnList(ctx->columnList()) << "]])\n";
@@ -85,6 +108,7 @@ std::any PythonGenerator::visitShowMultipleFeatures(MLScriptParser::ShowMultiple
 
 std::any PythonGenerator::visitShowAggFunc(MLScriptParser::ShowAggFuncContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
+    currentVarName = varName;
     std::string aggFunc = ctx->aggFunc()->getText();
     std::transform(aggFunc.begin(), aggFunc.end(), aggFunc.begin(), ::tolower);
 

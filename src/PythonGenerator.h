@@ -73,6 +73,11 @@ public:
     // == Data Inspection and Display ==
 
     /**
+     * @brief
+     */
+    std::any visitShowStat(MLScriptParser::ShowStatContext *ctx) override;
+
+    /**
      * @brief Displays the entire dataset.
      * Example: SHOW dataset;
      */
@@ -138,12 +143,57 @@ public:
     std::any visitSplitStat(MLScriptParser:: SplitStatContext *ctx) override;
 
     // == Conditions ==
+    
+    /**
+     * @brief
+     */
+    std::any visitWhereClause(MLScriptParser::WhereClauseContext *ctx) override;
 
     /**
-     * @brief Visits NOT alternative of the WHERE clause.
+     * @brief Visits all inner conditions and outputs them with parenthesis.
+     * Example: (condition)
+     * @return string
+     */
+    std::any visitNestedCondition(MLScriptParser::NestedConditionContext *ctx) override;
+
+    /**
+     * @brief Visits all inner conditions and outputs their negation.
+     * Example: NOT condition
      * @return string
      */
     std::any visitNotCondition(MLScriptParser::NotConditionContext *ctx) override;
+
+    /**
+     * @brief Visits all inner conditions and outputs them with relational operators.
+     * Example: expression >= expression
+     * @return string
+     */
+    std::any visitRelationalCondition(MLScriptParser::RelationalConditionContext *ctx) override;
+
+    /**
+     * @brief Visits all inner conditions and outputs them with logical operators.
+     * Example: condition AND condition
+     * @return string
+     */
+    std::any visitLogicalCondition(MLScriptParser::LogicalConditionContext *ctx) override;
+
+    /**
+     * @brief Retrieves a column name and outputs a valid pandas column reference.
+     * @return string
+     */
+    std::any visitColumnReference(MLScriptParser::ColumnReferenceContext *ctx) override;
+
+    /**
+     * @brief Retrieves a literal value.
+     * @return string
+     */
+    std::any visitLiteralValue(MLScriptParser::LiteralValueContext *ctx) override;
+
+    /**
+     * @brief Retrieves a literal.
+     * @return string
+     */
+    std::any visitLiteral(MLScriptParser::LiteralContext *ctx) override;
 
 private:
     /**
@@ -175,4 +225,9 @@ private:
      * @brief Retrieves a list of columns in a string format.
      */
     std::string getColumnList(MLScriptParser::ColumnListContext *ctx);
+
+    /**
+     * @brief Stores currently processed identifier;
+     */
+    std::string currentVarName;
 };
