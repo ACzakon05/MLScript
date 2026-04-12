@@ -77,7 +77,7 @@ condition
        ;
 
 expression
-       : STRING                                                                   # ColumnReference
+       : COL_NAME                                                                 # ColumnReference
        | literal                                                                  # LiteralValue
        ;
 
@@ -110,7 +110,7 @@ splitStat
 // --------------------------------------------------
 
 columnList
-       : STRING (COMMA STRING)* 
+       : COL_NAME (COMMA COL_NAME)* 
        ;
 
 aggFunc
@@ -193,11 +193,12 @@ RPAREN: ')' ;
 // Literals
 // --------------------------------------------------
 
-STRING:  '"' ~'"'* '"' ;
+STRING:  '\'' ~'\''* '\'' ;
 INTEGER: '-'? ( '0' | [1-9] DIGIT* ) ;
 FLOAT:   INTEGER '.' DIGIT+ ; 
 IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* ;
 RATIO: INTEGER ':' INTEGER ;
+COL_NAME: '"' ~'"'* '"' ;
 
 // --------------------------------------------------
 // Skipped

@@ -41,7 +41,7 @@ std::string leftExpression = std::any_cast<std::string>(visit(ctx->expression(0)
 }
 
 std::any PythonGenerator::visitColumnReference(MLScriptParser::ColumnReferenceContext *ctx) {
-    std::string columnName = ctx->STRING()->getText();
+    std::string columnName = ctx->COL_NAME()->getText();
 
     return std::string(currentVarName + "[" + columnName + "]");
 }

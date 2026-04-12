@@ -12,7 +12,7 @@ std::any PythonGenerator::visitProg(MLScriptParser::ProgContext *ctx) {
 
 std::string PythonGenerator::getColumnList(MLScriptParser::ColumnListContext *ctx) {
     std::string list;
-    auto strings = ctx->STRING();
+    auto strings = ctx->COL_NAME();
 
     for (size_t i = 0; i < strings.size(); ++i) {
         list += strings[i]->getText();
