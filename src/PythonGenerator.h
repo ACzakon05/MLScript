@@ -1,5 +1,6 @@
 #pragma once
 #include "MLScriptBaseVisitor.h"
+#include "CustomErrorListener.h"
 #include <sstream>
 #include <string>
 #include <iostream>
@@ -31,6 +32,8 @@ struct LoadConfig {
 class PythonGenerator : public MLScriptBaseVisitor {
 public:
     std::stringstream pythonCode;
+
+    PythonGenerator(CustomErrorListener& listener) : diagnostics(listener) {}
 
     // == Root ==
 
@@ -196,6 +199,11 @@ public:
     std::any visitLiteral(MLScriptParser::LiteralContext *ctx) override;
 
 private:
+    /**
+     * 
+     */
+    CustomErrorListener& diagnostics;
+
     /**
      * @brief Stores options to use when loading files via LOAD command.
      */

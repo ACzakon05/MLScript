@@ -5,6 +5,19 @@ std::any PythonGenerator::visitLoadStat(MLScriptParser::LoadStatContext *ctx) {
     std::string filePath = ctx->STRING()->getText();
     std::stringstream loadOptions;
 
+    std::string rawFilePath = filePath;
+    if (rawFilePath.length() >= 2 && rawFilePath.front() == '\'') {
+        rawFilePath = rawFilePath.substr(1, rawFilePath.length() - 2);
+    }
+
+    std::ifstream testFile(rawFilePath);
+    if (!testFile.good()) {
+        size_t line = ctx->getStart()->getLine();
+        size_t col = ctx->getStart()->getCharPositionInLine();
+
+        diagnostics.reportSemanticWarning(line, col, "File " + filePath + "not found at compile time.");
+    }
+
     visit(ctx->fileFormatLoadOptions());
 
     pythonCode << varName << " = " << "pd.read_";

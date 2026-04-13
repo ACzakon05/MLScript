@@ -44,15 +44,19 @@ int main(int argc, const char* argv[]) {
 
     antlr4::tree::ParseTree *tree = parser.prog();
 
-    if (errorListener.hasError) {
+    if (errorListener.hasSyntaxError) {
         std::cerr << "[Compiler] Compilation aborted due to errors\n";
         return 1;
     }
 
-    PythonGenerator visitor;
-    visitor.visit(tree);
+    PythonGenerator generator(errorListener);
+    generator.visit(tree);
 
-    std::string pythonCode = visitor.pythonCode.str();
+    if (errorListener.semanticWarningCount > 0) {
+        std::cout << "[Compiler] Finished with " << errorListener.semanticWarningCount << " warnings.\n";
+    }
+
+    std::string pythonCode = generator.pythonCode.str();
 
     std::cout << "[Compiler] Translation successful. Writing to mlscript.out.py\n";
 
