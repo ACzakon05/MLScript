@@ -2,7 +2,7 @@
 
 std::any PythonGenerator::visitSetTargetStat(MLScriptParser::SetTargetStatContext *ctx) {
     std::string dataSet = ctx->IDENTIFIER()->getText();
-    std::string targetCol = ctx->STRING()->getText();
+    std::string targetCol = ctx->COL_NAME()->getText();
     pythonCode<< "#Set target column for " << dataSet << ": " << targetCol << "\n";
     pythonCode << dataSet << "_target = " << dataSet << "[" << targetCol << "]\n";
     

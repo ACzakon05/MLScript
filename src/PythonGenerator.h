@@ -142,6 +142,41 @@ public:
      */
     std::any visitSplitStat(MLScriptParser:: SplitStatContext *ctx) override;
 
+    /**
+     * @brief Removes rows containing missing values (NA).
+     * If column list is provided via ON, only those columns are checked for missing values.
+     * Otherwise, all columns are considered.
+     * Example: DROP NA FROM my_dataset ON "col1", "col2";
+     * Example: DROP NA FROM my_dataset;
+     */
+    std::any visitDropNaStat(MLScriptParser::DropNaStatContext *ctx) override;
+
+    /**
+     * @brief Removes a specific column from a dataset.
+     * Example: DROP COLUMN "col1" FROM my_dataset;
+     */
+    std::any visitDropColumnStat(MLScriptParser::DropColumnStatContext *ctx) override;
+
+    /**
+     * @brief Normalizes dataset values to range [0, 1].
+     * If ON clause is used, only selected columns are normalized.
+     * Otherwise, all numeric columns are processed.
+     * Example: NORMALIZE my_dataset ON "col1", "col2";
+     * Example: NORMALIZE my_dataset;
+     */
+    std::any visitNormalizeStat(MLScriptParser::NormalizeStatContext *ctx) override;
+
+/**
+ * @brief Standardizes dataset values to mean 0 and standard deviation 1.
+ * If ON clause is used, only selected columns are standardized.
+ * Otherwise, all numeric columns are processed.
+ * Example: STANDARDIZE my_dataset ON "col1", "col2";
+ * Example: STANDARDIZE my_dataset;
+ */
+std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) override;
+
+
+
     // == Conditions ==
     
     /**
