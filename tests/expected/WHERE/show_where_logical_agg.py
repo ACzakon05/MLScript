@@ -4,4 +4,4 @@ my_dataset = pd.read_csv(
 	delimiter=",",
 	header="infer"
 )
-print(my_dataset[["price"]].where(my_dataset["category"]=='Electronics'&my_dataset["stock"]>=10).agg(['mean']))
+print(my_dataset[["price"]].where( ( (my_dataset["category"] == 'Electronics')  &  (my_dataset["stock"] >= 10) ) ).agg(['mean']))

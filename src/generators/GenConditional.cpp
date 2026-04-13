@@ -9,13 +9,13 @@ std::any PythonGenerator::visitWhereClause(MLScriptParser::WhereClauseContext *c
 std::any PythonGenerator::visitNestedCondition(MLScriptParser::NestedConditionContext *ctx) {
     std::string innerConditions = std::any_cast<std::string>(visit(ctx->condition()));
 
-    return std::string("(" + innerConditions + ")");
+    return std::string(" (" + innerConditions + ") ");
 }
 
 std::any PythonGenerator::visitNotCondition(MLScriptParser::NotConditionContext *ctx) {
     std::string innerConditions = std::any_cast<std::string>(visit(ctx->condition()));
 
-    return std::string("~(" + innerConditions + ")");
+    return std::string(" ~(" + innerConditions + ") ");
 }
 
 std::any PythonGenerator::visitLogicalCondition(MLScriptParser::LogicalConditionContext *ctx) {
@@ -27,7 +27,7 @@ std::any PythonGenerator::visitLogicalCondition(MLScriptParser::LogicalCondition
 
     std::string logicalOperatorPandas = logicalOperator == "and" ? "&" : "|";
 
-    return std::string(leftCondition + logicalOperatorPandas + rightCondition);
+    return std::string(" (" + leftCondition + " " + logicalOperatorPandas + " " + rightCondition + ") ");
 }
 
 std::any PythonGenerator::visitRelationalCondition(MLScriptParser::RelationalConditionContext *ctx) {
@@ -37,7 +37,7 @@ std::string leftExpression = std::any_cast<std::string>(visit(ctx->expression(0)
 
     std::string relationalOperatorPandas = relationalOperator == "=" ? "==" : relationalOperator;
 
-    return std::string(leftExpression + relationalOperatorPandas + rightExpression);
+    return std::string(" (" + leftExpression + " " + relationalOperatorPandas + " " + rightExpression + ") ");
 }
 
 std::any PythonGenerator::visitColumnReference(MLScriptParser::ColumnReferenceContext *ctx) {
