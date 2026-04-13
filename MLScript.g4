@@ -114,7 +114,7 @@ columnList
        ;
 
 aggFunc
-       : MEAN | MAX | MIN 
+       : MEAN | MAX | MIN | SUM | MEDIAN | PROD | STD | VAR | UNIQUE_VALS | UNIQUE_COUNT 
        ;
 
 logicalOperator
@@ -169,6 +169,13 @@ WHERE:       W H E R E ;
 NOT:         N O T ;
 AND:         A N D ;
 OR:          O R ;
+SUM:         S U M ;
+MEDIAN:      M E D I A N ;
+PROD:        P R O D ;
+STD:         S T D ;
+VAR:         V A R ;
+UNIQUE_VALS: U N I Q U E '_' V A L S ;
+UNIQUE_COUNT: U N I Q U E '_' C O U N T ;
 
 // --------------------------------------------------
 // Format keywords
