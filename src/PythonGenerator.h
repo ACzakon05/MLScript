@@ -223,7 +223,14 @@ private:
     std::unordered_map<std::string, std::string> aggFuncMap = {
         {"mean", "mean"},
         {"max", "max"},
-        {"min", "min"}
+        {"min", "min"},
+        {"sum", "sum"},
+        {"median", "median"},
+        {"prod", "prod"},
+        {"std", "std"},
+        {"var", "var"},
+        {"unique_vals", "unique"},
+        {"unique_count", "nunique"}
     };
 
     /**
