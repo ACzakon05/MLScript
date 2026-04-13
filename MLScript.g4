@@ -17,6 +17,7 @@ statement
        | showStat
        | setTargetStat
        | splitStat
+       | preprocessStat
        ;
 
 // --------------------------------------------------
@@ -93,7 +94,7 @@ literal
 // --------------------------------------------------
 
 setTargetStat
-       : SET TARGET STRING FOR IDENTIFIER
+       : SET TARGET COL_NAME FOR IDENTIFIER
        ;
 
 // --------------------------------------------------
@@ -104,6 +105,34 @@ splitStat
        : SPLIT IDENTIFIER RATIO_KW RATIO INTO IDENTIFIER COMMA IDENTIFIER
          (WITH SEED INTEGER COMMA SHUFFLE (TRUE | FALSE))? 
        ;
+
+
+// --------------------------------------------------
+// PREPROCESS command
+// --------------------------------------------------
+preprocessStat
+  : dropNaStat
+  | dropColumnStat
+  | normalizeStat
+  | standardizeStat
+  ;
+
+dropNaStat
+  : DROP NA FROM IDENTIFIER (ON columnList)?
+  ;
+
+dropColumnStat
+  : DROP COLUMN COL_NAME FROM IDENTIFIER
+  ;
+
+normalizeStat
+  : NORMALIZE IDENTIFIER (ON columnList)?
+  ;
+
+standardizeStat
+  : STANDARDIZE IDENTIFIER (ON columnList)?
+  ;
+
 
 // --------------------------------------------------
 // Shared
@@ -176,6 +205,12 @@ STD:         S T D ;
 VAR:         V A R ;
 UNIQUE_VALS: U N I Q U E '_' V A L S ;
 UNIQUE_COUNT: U N I Q U E '_' C O U N T ;
+DROP: D R O P;
+COLUMN: C O L U M N;
+NA: N A;
+NORMALIZE: N O R M A L I Z E ;
+STANDARDIZE: S T A N D A R D I Z E ;
+ON: O N;
 
 // --------------------------------------------------
 // Format keywords
