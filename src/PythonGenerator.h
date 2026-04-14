@@ -233,6 +233,31 @@ std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) overr
      */
     std::any visitLiteral(MLScriptParser::LiteralContext *ctx) override;
 
+    // == Training ==
+
+    /**
+     * @brief Visits the root of the TRAIN statement.
+     */
+    std::any visitTrainStat(MLScriptParser::TrainStatContext *ctx) override;
+
+    /**
+     * @brief Converts the training option (model selection) to a Scikit statement and returns it.
+     * @return string
+     */
+    std::any visitTrainOption(MLScriptParser::TrainOptionContext *ctx) override;
+
+    /**
+     * @brief Handles the Regression branch.
+     * @return string
+     */
+    std::any visitRegressor(MLScriptParser::RegressorContext *ctx) override;
+
+    /**
+     * @brief Handles the Classifier branch.
+     * @return string
+     */
+    std::any visitClassifier(MLScriptParser::ClassifierContext *ctx) override;
+
 private:
     /**
      * 
@@ -274,6 +299,14 @@ private:
         {"var", "var"},
         {"unique_vals", "unique"},
         {"unique_count", "nunique"}
+    };
+
+    /**
+     * @brief Maps lowercase model names from grammar to Scikit equivalent.
+     */
+    std::unordered_map<std::string, std::string> modelNameMap = {
+        {"linear_regression", "LinearRegression"},
+        {"naive_bayes", "MultinomialNB"}
     };
 
     /**

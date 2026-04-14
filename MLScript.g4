@@ -18,6 +18,7 @@ statement
        | setTargetStat
        | splitStat
        | preprocessStat
+       | trainStat
        ;
 
 // --------------------------------------------------
@@ -110,6 +111,7 @@ splitStat
 // --------------------------------------------------
 // PREPROCESS command
 // --------------------------------------------------
+
 preprocessStat
   : dropNaStat
   | dropColumnStat
@@ -133,6 +135,26 @@ standardizeStat
   : STANDARDIZE IDENTIFIER (ON columnList)?
   ;
 
+// --------------------------------------------------
+// TRAIN command
+// --------------------------------------------------
+
+trainStat
+       : TRAIN IDENTIFIER ON IDENTIFIER CHOOSE trainOption
+       ;
+
+trainOption
+       : regressor
+       | classifier
+       ;
+
+regressor
+       : LINEAR_REGRESSION
+       ;
+
+classifier
+       : NAIVE_BAYES
+       ;
 
 // --------------------------------------------------
 // Shared
@@ -211,6 +233,8 @@ NA: N A;
 NORMALIZE: N O R M A L I Z E ;
 STANDARDIZE: S T A N D A R D I Z E ;
 ON: O N;
+TRAIN: T R A I N ;
+CHOOSE: C H O O S E ;
 
 // --------------------------------------------------
 // Format keywords
@@ -221,6 +245,13 @@ SQL:         S Q L ;
 JSON:        J S O N ;
 PKL:         P K L ;
 HTML:        H T M L ;
+
+// --------------------------------------------------
+// Models
+// --------------------------------------------------
+
+LINEAR_REGRESSION:   L I N E A R '_' R E G R E S S I O N ;
+NAIVE_BAYES:         N A I V E '_' B A Y E S ;
 
 // --------------------------------------------------
 // Punctuation
