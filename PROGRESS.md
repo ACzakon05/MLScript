@@ -98,3 +98,17 @@
 
 ---
 
+## CREATE - tworzenie modeli
+* [x] wspiera tworzenie modelu
+* [x] wspiera `LinearRegression` wraz z parametrami
+* [ ] wspiera inne modele
+* [ ] naprawa błedu, gdzie `CREATE` wymaga `WITH` nawet bez parametrów
+* [ ] obłsuga błędów
+* [ ] testy
+* [ ] obmyślenie krótszego i uniwersalnego sposobu na ustawianie parametrów w `visit*ParamsList` dla każdego typu modelu
+
+---
+
+## TRAIN - trenowanie modeli
+* [x] obsługa komendy `TRAIN`
+* [ ] dostosowanie komendy train do wprowadzonej `CREATE`

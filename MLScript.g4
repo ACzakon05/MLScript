@@ -18,6 +18,7 @@ statement
        | setTargetStat
        | splitStat
        | preprocessStat
+       | createModelStat
        | trainStat
        ;
 
@@ -136,6 +137,25 @@ standardizeStat
   ;
 
 // --------------------------------------------------
+// CREATE model
+// --------------------------------------------------
+
+createModelStat
+       : CREATE IDENTIFIER CHOOSE modelDefinition 
+       ;
+
+modelDefinition
+       : LINEAR_REGRESSION WITH linearRegressionParamsList         #CreateModelLinReg
+       ;
+
+linearRegressionParamsList
+       : ( FIT_INTERCEPT fitInterceptVal=(TRUE | FALSE)? )?
+         ( TOL tolVal=FLOAT )?
+         ( N_JOBS nJobsVal=INTEGER )?
+         ( POSITIVE positiveVal=(TRUE | FALSE)? )?
+       ;
+
+// --------------------------------------------------
 // TRAIN command
 // --------------------------------------------------
 
@@ -235,6 +255,11 @@ STANDARDIZE: S T A N D A R D I Z E ;
 ON: O N;
 TRAIN: T R A I N ;
 CHOOSE: C H O O S E ;
+CREATE: C R E A T E ;
+FIT_INTERCEPT: F I T '_' I N T E R C E P T ;
+TOL: T O L ;
+N_JOBS: N '_' J O B S ;
+POSITIVE: P O S I T I V E ;
 
 // --------------------------------------------------
 // Format keywords

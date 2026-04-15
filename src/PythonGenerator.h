@@ -233,6 +233,23 @@ std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) overr
      */
     std::any visitLiteral(MLScriptParser::LiteralContext *ctx) override;
 
+    // == Creating a model ==
+
+    /**
+     * @brief
+     */
+    std::any visitCreateModelStat(MLScriptParser::CreateModelStatContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitCreateModelLinReg(MLScriptParser::CreateModelLinRegContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitLinearRegressionParamsList(MLScriptParser::LinearRegressionParamsListContext *ctx) override;
+
     // == Training ==
 
     /**
