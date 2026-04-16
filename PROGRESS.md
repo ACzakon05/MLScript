@@ -102,7 +102,8 @@
 * [x] wspiera tworzenie modelu
 * [x] wspiera `LinearRegression` wraz z parametrami
 * [ ] wspiera inne modele
-* [ ] naprawa błedu, gdzie `CREATE` wymaga `WITH` nawet bez parametrów
+* [x] naprawa błedu, gdzie `CREATE` wymaga `WITH` nawet bez parametrów
+* [ ] możliwość zamiany kolejności parametrów
 * [ ] obłsuga błędów
 * [ ] testy
 * [ ] obmyślenie krótszego i uniwersalnego sposobu na ustawianie parametrów w `visit*ParamsList` dla każdego typu modelu
