@@ -1,0 +1,1 @@
+create lin_reg choose linear_regression with tol 1e-7;

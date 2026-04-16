@@ -145,12 +145,12 @@ createModelStat
        ;
 
 modelDefinition
-       : LINEAR_REGRESSION WITH linearRegressionParamsList         #CreateModelLinReg
+       : LINEAR_REGRESSION (WITH linearRegressionParamsList)?         #CreateModelLinReg
        ;
 
 linearRegressionParamsList
        : ( FIT_INTERCEPT fitInterceptVal=(TRUE | FALSE)? )?
-         ( TOL tolVal=FLOAT )?
+         ( TOL tolVal=E_FLOAT )?
          ( N_JOBS nJobsVal=INTEGER )?
          ( POSITIVE positiveVal=(TRUE | FALSE)? )?
        ;
@@ -294,6 +294,7 @@ RPAREN: ')' ;
 STRING:  '\'' ~'\''* '\'' ;
 INTEGER: '-'? ( '0' | [1-9] DIGIT* ) ;
 FLOAT:   INTEGER '.' DIGIT+ ; 
+E_FLOAT: (INTEGER | FLOAT) E INTEGER ;
 IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]* ;
 RATIO: INTEGER ':' INTEGER ;
 COL_NAME: '"' ~'"'* '"' ;

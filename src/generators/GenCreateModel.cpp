@@ -23,7 +23,13 @@ std::any PythonGenerator::visitCreateModelStat(MLScriptParser::CreateModelStatCo
 }
 
 std::any PythonGenerator::visitCreateModelLinReg(MLScriptParser::CreateModelLinRegContext *ctx) {
-    return visit(ctx->linearRegressionParamsList());
+    if (ctx->linearRegressionParamsList() != nullptr) {
+        return visit(ctx->linearRegressionParamsList());
+    }
+
+    std::shared_ptr<ModelDefinition> emptyLinReg = std::make_shared<LinRegDefinition>();
+
+    return emptyLinReg;
 }
 
 std::any PythonGenerator::visitLinearRegressionParamsList(MLScriptParser::LinearRegressionParamsListContext *ctx) {
