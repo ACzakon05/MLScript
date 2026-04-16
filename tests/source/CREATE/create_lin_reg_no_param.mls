@@ -1,1 +1,1 @@
-create lin_reg choose linear_regression;
+create model lin_reg choose linear_regression;

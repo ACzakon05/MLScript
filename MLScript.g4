@@ -141,7 +141,7 @@ standardizeStat
 // --------------------------------------------------
 
 createModelStat
-       : CREATE IDENTIFIER CHOOSE modelDefinition 
+       : CREATE MODEL IDENTIFIER CHOOSE modelDefinition 
        ;
 
 modelDefinition
@@ -164,20 +164,7 @@ linRegModelParamWithVal
 // --------------------------------------------------
 
 trainStat
-       : TRAIN IDENTIFIER ON IDENTIFIER CHOOSE trainOption
-       ;
-
-trainOption
-       : regressor
-       | classifier
-       ;
-
-regressor
-       : LINEAR_REGRESSION
-       ;
-
-classifier
-       : NAIVE_BAYES
+       : TRAIN modelName=IDENTIFIER ON trainSet=IDENTIFIER
        ;
 
 // --------------------------------------------------
@@ -264,6 +251,7 @@ FIT_INTERCEPT: F I T '_' I N T E R C E P T ;
 TOL: T O L ;
 N_JOBS: N '_' J O B S ;
 POSITIVE: P O S I T I V E ;
+MODEL: M O D E L ;
 
 // --------------------------------------------------
 // Format keywords

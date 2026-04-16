@@ -277,24 +277,6 @@ std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) overr
      */
     std::any visitTrainStat(MLScriptParser::TrainStatContext *ctx) override;
 
-    /**
-     * @brief Converts the training option (model selection) to a Scikit statement and returns it.
-     * @return string
-     */
-    std::any visitTrainOption(MLScriptParser::TrainOptionContext *ctx) override;
-
-    /**
-     * @brief Handles the Regression branch.
-     * @return string
-     */
-    std::any visitRegressor(MLScriptParser::RegressorContext *ctx) override;
-
-    /**
-     * @brief Handles the Classifier branch.
-     * @return string
-     */
-    std::any visitClassifier(MLScriptParser::ClassifierContext *ctx) override;
-
 private:
     /**
      * 
