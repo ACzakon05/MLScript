@@ -4,7 +4,8 @@ std::any PythonGenerator::visitSetTargetStat(MLScriptParser::SetTargetStatContex
     std::string dataSet = ctx->IDENTIFIER()->getText();
     std::string targetCol = ctx->COL_NAME()->getText();
     pythonCode<< "#Set target column for " << dataSet << ": " << targetCol << "\n";
-    pythonCode << dataSet << "_target = " << dataSet << "[" << targetCol << "]\n";
+    pythonCode << dataSet << "_y = " << dataSet << "[" << targetCol << "]\n";
+    pythonCode << dataSet << "_X = " << dataSet << ".drop([" << targetCol << "])\n";
     
     return visitChildren(ctx);
 } 
@@ -38,10 +39,10 @@ std::any PythonGenerator::visitSplitStat(MLScriptParser:: SplitStatContext *ctx)
     
     pythonCode << "# Split dataset into train and test\n";
     pythonCode << "from sklearn.model_selection import train_test_split\n";
-    pythonCode << trainSubset << ", " << testSubset << ", " 
-            << trainSubset << "_target, " << testSubset << "_target = train_test_split(\n";
-    pythonCode << "    " << dataSet << ".drop(columns=[" << dataSet << "_target.name]),\n";
-    pythonCode << "    " << dataSet << "_target,\n";
+    pythonCode << trainSubset << "_X , " << testSubset << "_X , " 
+            << trainSubset << "_y, " << testSubset << "_y = train_test_split(\n";
+    pythonCode << "    " << dataSet << "_X,\n";
+    pythonCode << "    " << dataSet << "_y,\n";
     pythonCode << "    test_size=" << testSize << ",\n";
     pythonCode << "    random_state=" << seed << ",\n";
     pythonCode << "    shuffle=" << shuffle << "\n";

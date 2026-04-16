@@ -1,0 +1,1 @@
+train lin_reg on train_set;

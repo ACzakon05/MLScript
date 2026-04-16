@@ -1,1 +1,1 @@
-create lin_reg choose linear_regression with fit_intercept false, tol 1e-5;
+create model lin_reg choose linear_regression with fit_intercept false, tol 1e-5;
