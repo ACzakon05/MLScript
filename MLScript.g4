@@ -149,10 +149,14 @@ modelDefinition
        ;
 
 linearRegressionParamsList
-       : ( FIT_INTERCEPT fitInterceptVal=(TRUE | FALSE)? )?
-         ( TOL tolVal=E_FLOAT )?
-         ( N_JOBS nJobsVal=INTEGER )?
-         ( POSITIVE positiveVal=(TRUE | FALSE)? )?
+       : linRegModelParamWithVal (COMMA linRegModelParamWithVal)*
+       ;
+
+linRegModelParamWithVal
+       : FIT_INTERCEPT val=(TRUE | FALSE)?  # LinRegParamFitIntercept
+       | TOL val=E_FLOAT                             # LinRegParamTol
+       | N_JOBS val=INTEGER                        # LinRegParamNJobs
+       | POSITIVE val=(TRUE | FALSE)?           # LinRegParamPositive
        ;
 
 // --------------------------------------------------

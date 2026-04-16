@@ -1,5 +1,6 @@
 #include "PythonGenerator.h"
 #include "model/modelDefinition/LinRegDefinition.h"
+#include "utils/ModelParamParseUtil.h"
 
 std::any PythonGenerator::visitCreateModelStat(MLScriptParser::CreateModelStatContext *ctx) {
     std::string modelName = ctx->IDENTIFIER()->getText();
@@ -37,44 +38,31 @@ std::any PythonGenerator::visitLinearRegressionParamsList(MLScriptParser::Linear
 
     auto linReg = std::static_pointer_cast<LinRegDefinition>(modelDefinition);
 
-    std::any fitInterceptParam = ctx->FIT_INTERCEPT();
-    std::any tolParam = ctx->TOL();
-    std::any nJobsParam = ctx->N_JOBS();
-    std::any positiveParam = ctx->POSITIVE();
+    for (auto paramCtx : ctx->linRegModelParamWithVal()) {
+        auto userParam = visit(paramCtx);
 
-    if (ctx->FIT_INTERCEPT() != nullptr) {
-        std::string fitInterceptUser = ctx->fitInterceptVal->getText();
+        if (userParam.has_value()) {
+            auto userParamPair = std::any_cast<std::pair<std::string, std::string>>(userParam);
 
-        if (!fitInterceptUser.empty()) {
-            std::transform(fitInterceptUser.begin(), fitInterceptUser.end(), fitInterceptUser.begin(), [](unsigned char c){ return std::tolower(c); });
-            linReg->params["fitintercept"] = fitInterceptUser == "true" ? "True" : "False";
-        }
-    }
-
-    if (ctx->TOL() != nullptr) {
-        std::string tolUser = ctx->tolVal->getText();
-
-        if (!tolUser.empty()) {
-            linReg->params["tol"] = tolUser;
-        }
-    }
-
-    if (ctx->N_JOBS() != nullptr) {
-        std::string nJobsUser = ctx->nJobsVal->getText();
-
-        if (!nJobsUser.empty()) {
-            linReg->params["njobs"] = nJobsUser;
-        }
-    }
-
-    if (ctx->POSITIVE() != nullptr) {
-        std::string positiveUser = ctx->positiveVal->getText();
-
-        if (!positiveUser.empty()) {
-            std::transform(positiveUser.begin(), positiveUser.end(), positiveUser.begin(), [](unsigned char c){ return std::tolower(c); });
-            linReg->params["positive"] = positiveUser == "true" ? "True" : "False";
+            linReg->params[userParamPair.first] = userParamPair.second;
         }
     }
 
     return modelDefinition;
+}
+
+std::any PythonGenerator::visitLinRegParamFitIntercept(MLScriptParser::LinRegParamFitInterceptContext *ctx) {
+    return ModelParamParseUtil::parseBooleanParam("fitintercept", ctx);
+}
+
+std::any PythonGenerator::visitLinRegParamTol(MLScriptParser::LinRegParamTolContext *ctx) {
+    return ModelParamParseUtil::parseNumberParam("tol", ctx);
+}
+
+std::any PythonGenerator::visitLinRegParamNJobs(MLScriptParser::LinRegParamNJobsContext *ctx) {
+    return ModelParamParseUtil::parseNumberParam("njobs", ctx);
+}
+
+std::any PythonGenerator::visitLinRegParamPositive(MLScriptParser::LinRegParamPositiveContext *ctx) {
+    return ModelParamParseUtil::parseBooleanParam("positive", ctx);
 }

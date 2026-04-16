@@ -250,6 +250,26 @@ std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) overr
      */
     std::any visitLinearRegressionParamsList(MLScriptParser::LinearRegressionParamsListContext *ctx) override;
 
+    /**
+     * @brief
+     */
+    std::any visitLinRegParamFitIntercept(MLScriptParser::LinRegParamFitInterceptContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitLinRegParamTol(MLScriptParser::LinRegParamTolContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitLinRegParamNJobs(MLScriptParser::LinRegParamNJobsContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitLinRegParamPositive(MLScriptParser::LinRegParamPositiveContext *ctx) override;
+
     // == Training ==
 
     /**
