@@ -20,44 +20,45 @@ std::any PythonGenerator::visitLoadStat(MLScriptParser::LoadStatContext *ctx) {
 
     visit(ctx->fileFormatLoadOptions());
 
-    pythonCode << varName << " = " << "pd.read_";
+    pythonCode << "with safe_execute_load(f\"loading " << filePath << "\"):\n";
+    pythonCode << "\t" << varName << " = " << "pd.read_";
 
     switch (loadConfig.fileFormat)
     {
     case fileExtension::CSV:
         loadOptions << "csv(\n";
-        loadOptions << "\tfilepath_or_buffer=" << filePath << ",\n";
-        loadOptions << "\tdelimiter=\"" << loadConfig.delimiter << "\",\n";
-        loadOptions << "\theader=\"" << loadConfig.headerOption << "\"\n";
-        loadOptions << ")\n";
+        loadOptions << "\t\tfilepath_or_buffer=" << filePath << ",\n";
+        loadOptions << "\t\tdelimiter=\"" << loadConfig.delimiter << "\",\n";
+        loadOptions << "\t\theader=\"" << loadConfig.headerOption << "\"\n";
+        loadOptions << "\t)\n";
         break;
     case fileExtension::JSON:
         loadOptions << "json(\n";
-        loadOptions << "\tpath_or_buf=" << filePath << ",\n";
-        loadOptions << "\torient=" << loadConfig.orient << "\n";
-        loadOptions << ")\n";
+        loadOptions << "\t\tpath_or_buf=" << filePath << ",\n";
+        loadOptions << "\t\torient=" << loadConfig.orient << "\n";
+        loadOptions << "\t)\n";
         break;
     case fileExtension::PKL:
         loadOptions << "pickle(\n";
-        loadOptions << "\tfilepath_or_buffer=" << filePath << "\n";
-        loadOptions << ")\n";
+        loadOptions << "\t\tfilepath_or_buffer=" << filePath << "\n";
+        loadOptions << "\t)\n";
         break;
     default:
         break;
     }
 
-    pythonCode << loadOptions.str();
+    pythonCode << "" << loadOptions.str();
 
     visit(ctx->generalLoadOptions());
 
     if (!loadConfig.columnsToKeep.empty()) {
-        pythonCode << varName << " = " << varName << "[[" << loadConfig.columnsToKeep << "]]\n";
+        pythonCode << "\t" << varName << " = " << varName << "[[" << loadConfig.columnsToKeep << "]]\n";
     }
     if (!loadConfig.columnsToDiscard.empty()) {
-        pythonCode << varName << " = " << varName << ".drop(columns=[" << loadConfig.columnsToDiscard << "])\n";
+        pythonCode << "\t" << varName << " = " << varName << ".drop(columns=[" << loadConfig.columnsToDiscard << "])\n";
     }
     if (!loadConfig.nrows.empty()) {
-        pythonCode << varName << " = " << varName << ".iloc[:" << loadConfig.nrows << "]\n";
+        pythonCode << "\t" << varName << " = " << varName << ".iloc[:" << loadConfig.nrows << "]\n";
     }
     
     return {};
