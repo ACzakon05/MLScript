@@ -10,7 +10,7 @@
 * [x] komenda `LOAD` wspiera pliki `.csv` wraz z opcjami
 * [x] komenda `LOAD` wspiera pliki `.json` wraz z opcjami
 * [x] komenda `LOAD` wspiera ładowanie wybranej liczby wierszy
-* [ ] obsługa błędów dla komendy `LOAD`
+* [x] obsługa błędów dla komendy `LOAD`
 
 ---
 
