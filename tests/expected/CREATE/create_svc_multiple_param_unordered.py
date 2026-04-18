@@ -1,8 +1,10 @@
 import pandas as pd
 from mlscript_runtime.error_handling.safe_execute_load import safe_execute_load
-lin_reg = LinearRegression(
-	positive=True,
-	n_jobs=-1,
-	tol=1e-4,
-	fit_intercept=False,
+svm_clf = SVC(
+	probability=True,
+	coef0=0.0,
+	gamma=1.3,
+	kernel='sigmoid',
+	degree=3,
+	C=1.4,
 )

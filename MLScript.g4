@@ -145,7 +145,8 @@ createModelStat
        ;
 
 modelDefinition
-       : LINEAR_REGRESSION (WITH linearRegressionParamsList)?         #CreateModelLinReg
+       : LINEAR_REGRESSION (WITH linearRegressionParamsList)?         # CreateModelLinReg
+       | SVC (WITH svcParamsList)?                                    # CreateModelSVC
        ;
 
 linearRegressionParamsList
@@ -158,6 +159,24 @@ linRegModelParamWithVal
        | N_JOBS val=INTEGER                        # LinRegParamNJobs
        | POSITIVE val=(TRUE | FALSE)?           # LinRegParamPositive
        ;
+
+svcParamsList
+       : svcParamWithVal (COMMA svcParamWithVal)*
+       ;
+
+svcParamWithVal
+       : ('C' | 'c') val=numeric          # SvcParamC
+       | KERNEL val=STRING                # SvcParamKernel
+       | DEGREE val=INTEGER               # SvcParamDegree
+       | GAMMA val=svc_gamma_val     # SvcParamGamma
+       | COEF_0 val=numeric               # SvcParamCoef0
+       | PROBABILITY val=(TRUE | FALSE)?  # SvcParamProbability
+       ;
+
+svc_gamma_val
+       : STRING
+       | numeric
+       ; 
 
 // --------------------------------------------------
 // TRAIN command
@@ -186,6 +205,8 @@ logicalOperator
 comparisonOperator
        : '=' | '!=' | '>' | '<' | '>=' | '<='
        ;
+
+numeric: FLOAT | INTEGER | E_FLOAT ;
 
 // ==================================================
 // Lexer Rules
@@ -252,6 +273,11 @@ TOL: T O L ;
 N_JOBS: N '_' J O B S ;
 POSITIVE: P O S I T I V E ;
 MODEL: M O D E L ;
+KERNEL: K E R N E L ;
+DEGREE: D E G R E E ;
+GAMMA: G A M M A ;
+COEF_0: C O E F '_0' ;
+PROBABILITY: P R O B A B I L I T Y ;
 
 // --------------------------------------------------
 // Format keywords
@@ -268,7 +294,7 @@ HTML:        H T M L ;
 // --------------------------------------------------
 
 LINEAR_REGRESSION:   L I N E A R '_' R E G R E S S I O N ;
-NAIVE_BAYES:         N A I V E '_' B A Y E S ;
+SVC:                 S V C ;
 
 // --------------------------------------------------
 // Punctuation

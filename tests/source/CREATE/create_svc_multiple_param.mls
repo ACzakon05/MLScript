@@ -1,0 +1,1 @@
+create model svm_clf choose svc with c 0.9, kernel 'linear';

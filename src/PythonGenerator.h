@@ -270,6 +270,46 @@ std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) overr
      */
     std::any visitLinRegParamPositive(MLScriptParser::LinRegParamPositiveContext *ctx) override;
 
+    /**
+     * @brief
+     */
+    std::any visitCreateModelSVC(MLScriptParser::CreateModelSVCContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitSvcParamsList(MLScriptParser::SvcParamsListContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitSvcParamC(MLScriptParser::SvcParamCContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitSvcParamKernel(MLScriptParser::SvcParamKernelContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitSvcParamDegree(MLScriptParser::SvcParamDegreeContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitSvcParamGamma(MLScriptParser::SvcParamGammaContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitSvcParamCoef0(MLScriptParser::SvcParamCoef0Context *ctx) override;
+
+    /**
+     * @brief
+     */
+     std::any visitSvcParamProbability(MLScriptParser::SvcParamProbabilityContext *ctx) override;
+
     // == Training ==
 
     /**
