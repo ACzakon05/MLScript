@@ -56,11 +56,13 @@ int main(int argc, const char* argv[]) {
         std::cout << "[Compiler] Finished with " << errorListener.semanticWarningCount << " warnings.\n";
     }
 
+    std::string pythonHeader = generator.pythonHeader.str();
     std::string pythonCode = generator.pythonCode.str();
 
     std::cout << "[Compiler] Translation successful. Writing to mlscript.out.py\n";
 
     std::ofstream outFile("mlscript.out.py");
+    outFile << pythonHeader;
     outFile << pythonCode;
     outFile.close();
 
