@@ -147,7 +147,12 @@ createModelStat
 modelDefinition
        : LINEAR_REGRESSION (WITH linearRegressionParamsList)?         # CreateModelLinReg
        | SVC (WITH svcParamsList)?                                    # CreateModelSVC
+       | RIDGE (WITH ridgeParamsList)?                                # CreateModelRidge
        ;
+
+// == Regressors
+
+// LinearRegression
 
 linearRegressionParamsList
        : linRegModelParamWithVal (COMMA linRegModelParamWithVal)*
@@ -159,6 +164,25 @@ linRegModelParamWithVal
        | N_JOBS val=INTEGER                        # LinRegParamNJobs
        | POSITIVE val=(TRUE | FALSE)?           # LinRegParamPositive
        ;
+
+// Ridge
+
+ridgeParamsList
+       : ridgeModelParamWithVal (COMMA ridgeModelParamWithVal)*
+       ;
+
+ridgeModelParamWithVal
+       : ALPHA val=numeric                     # RidgeParamAlpha
+       | FIT_INTERCEPT val=(TRUE | FALSE)?     # RidgeParamFitIntercept
+       | MAX_ITERATIONS val=INTEGER            # RidgeParamMaxIter
+       | TOL val=numeric                       # RidgeParamTol
+       | SOLVER val=STRING                     # RidgeParamSolver
+       | POSITIVE val=(TRUE | FALSE)?          # RidgeParamPositive
+       ;
+
+// == Classifiers
+
+// SVC
 
 svcParamsList
        : svcParamWithVal (COMMA svcParamWithVal)*
@@ -278,6 +302,10 @@ DEGREE: D E G R E E ;
 GAMMA: G A M M A ;
 COEF_0: C O E F '_0' ;
 PROBABILITY: P R O B A B I L I T Y ;
+ALPHA: A L P H A ;
+MAX_ITERATIONS: M A X '_' I T E R A T I O N S ;
+SOLVER: S O L V E R ;
+RIDGE: R I D G E ;
 
 // --------------------------------------------------
 // Format keywords

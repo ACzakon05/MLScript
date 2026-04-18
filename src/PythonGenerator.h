@@ -248,6 +248,8 @@ std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) overr
      */
     std::any visitCreateModelStat(MLScriptParser::CreateModelStatContext *ctx) override;
 
+    // LinearRegression
+
     /**
      * @brief
      */
@@ -277,6 +279,50 @@ std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) overr
      * @brief
      */
     std::any visitLinRegParamPositive(MLScriptParser::LinRegParamPositiveContext *ctx) override;
+
+    // Ridge
+
+    /**
+     * @brief
+     */
+    std::any visitCreateModelRidge(MLScriptParser::CreateModelRidgeContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitRidgeParamsList(MLScriptParser::RidgeParamsListContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitRidgeParamAlpha(MLScriptParser::RidgeParamAlphaContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitRidgeParamFitIntercept(MLScriptParser::RidgeParamFitInterceptContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitRidgeParamMaxIter(MLScriptParser::RidgeParamMaxIterContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitRidgeParamTol(MLScriptParser::RidgeParamTolContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitRidgeParamSolver(MLScriptParser::RidgeParamSolverContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitRidgeParamPositive(MLScriptParser::RidgeParamPositiveContext *ctx) override;
+    
+    // SVC
 
     /**
      * @brief

@@ -1,0 +1,1 @@
+create model ridge_reg choose ridge with tol 1e-3, positive, alpha 0.1, solver 'saga', max_iterations 500, fit_intercept false;
