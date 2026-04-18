@@ -20,7 +20,7 @@ namespace ModelParamParseUtil {
     }
 
     template <typename T>
-    std::pair<std::string, std::string> parseNumberParam(std::string paramName, T *ctx) {
+    std::pair<std::string, std::string> parseAlNumParam(std::string paramName, T *ctx) {
         std::any paramValAny = ctx->val->getText();
         std::string paramValString = std::any_cast<std::string>(paramValAny);
 

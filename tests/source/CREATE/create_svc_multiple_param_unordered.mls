@@ -1,0 +1,1 @@
+create model svm_clf choose svc with kernel 'sigmoid', C 1.4, gamma 1.3, probability;
