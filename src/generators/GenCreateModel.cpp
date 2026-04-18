@@ -27,6 +27,8 @@ std::any PythonGenerator::visitCreateModelStat(MLScriptParser::CreateModelStatCo
 // == LinearRegression ==
 
 std::any PythonGenerator::visitCreateModelLinReg(MLScriptParser::CreateModelLinRegContext *ctx) {
+    pythonHeader << "from sklearn.linear_model import LinearRegression\n";
+
     if (ctx->linearRegressionParamsList() != nullptr) {
         return visit(ctx->linearRegressionParamsList());
     }
@@ -73,6 +75,8 @@ std::any PythonGenerator::visitLinRegParamPositive(MLScriptParser::LinRegParamPo
 // == SVC ==
 
 std::any PythonGenerator::visitCreateModelSVC(MLScriptParser::CreateModelSVCContext *ctx) {
+    pythonHeader << "from sklearn.svm import SVC\n";
+
     if (ctx->svcParamsList() != nullptr) {
         return visit(ctx->svcParamsList());
     }

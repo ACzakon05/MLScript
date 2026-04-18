@@ -31,6 +31,14 @@ struct LoadConfig {
 
 class PythonGenerator : public MLScriptBaseVisitor {
 public:
+    /**
+     * @brief Stores the contents of python file header (options, constants, etc.)
+     */
+    std::stringstream pythonHeader;
+
+    /**
+     * @brief Stores the contents of translated python code
+     */
     std::stringstream pythonCode;
 
     PythonGenerator(CustomErrorListener& listener) : diagnostics(listener) {}

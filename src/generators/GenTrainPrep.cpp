@@ -38,7 +38,7 @@ std::any PythonGenerator::visitSplitStat(MLScriptParser:: SplitStatContext *ctx)
     }
     
     pythonCode << "# Split dataset into train and test\n";
-    pythonCode << "from sklearn.model_selection import train_test_split\n";
+    pythonHeader << "from sklearn.model_selection import train_test_split\n";
     pythonCode << trainSubset << "_X , " << testSubset << "_X , " 
             << trainSubset << "_y, " << testSubset << "_y = train_test_split(\n";
     pythonCode << "    " << dataSet << "_X,\n";
