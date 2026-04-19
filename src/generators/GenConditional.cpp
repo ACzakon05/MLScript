@@ -43,7 +43,11 @@ std::string leftExpression = std::any_cast<std::string>(visit(ctx->expression(0)
 std::any PythonGenerator::visitColumnReference(MLScriptParser::ColumnReferenceContext *ctx) {
     std::string columnName = ctx->COL_NAME()->getText();
 
-    return std::string(currentVarName + "[" + columnName + "]");
+    if (isColumnContext) {
+        return columnName;  // For column conditions, COL_NAME refers to column name as string
+    } else {
+        return std::string(currentVarName + "[" + columnName + "]");
+    }
 }
 
 std::any PythonGenerator::visitLiteralValue(MLScriptParser::LiteralValueContext *ctx) {
@@ -58,4 +62,26 @@ std::any PythonGenerator::visitLiteral(MLScriptParser::LiteralContext *ctx) {
     return literal;
 }
 
-    
+std::any PythonGenerator::visitNameExpr(MLScriptParser::NameExprContext *ctx) {
+    if (isColumnContext) {
+        return std::string("col");
+    } else {
+        return std::string("");
+    }
+}
+
+std::any PythonGenerator::visitTypeExpr(MLScriptParser::TypeExprContext *ctx) {
+    if (isColumnContext) {
+        return std::string("DATASET[col].dtype");
+    } else {
+        return std::string("");
+    }
+}
+
+std::any PythonGenerator::visitMissingRateExpr(MLScriptParser::MissingRateExprContext *ctx) {
+    if (isColumnContext) {
+        return std::string("DATASET[col].isna().sum() / len(DATASET)");
+    } else {
+        return std::string("");
+    }
+}

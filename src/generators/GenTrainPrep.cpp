@@ -2,10 +2,12 @@
 
 std::any PythonGenerator::visitSetTargetStat(MLScriptParser::SetTargetStatContext *ctx) {
     std::string dataSet = ctx->IDENTIFIER()->getText();
-    std::string targetCol = ctx->COL_NAME()->getText();
+    std::string targetColWithQuotes = ctx->COL_NAME()->getText();
+    std::string targetCol = targetColWithQuotes.substr(1, targetColWithQuotes.size() - 2); // Remove quotes
+    targetColumns[dataSet] = targetCol;
     pythonCode<< "#Set target column for " << dataSet << ": " << targetCol << "\n";
-    pythonCode << dataSet << "_y = " << dataSet << "[" << targetCol << "]\n";
-    pythonCode << dataSet << "_X = " << dataSet << ".drop([" << targetCol << "])\n";
+    pythonCode << dataSet << "_y = " << dataSet << "[" << targetColWithQuotes << "]\n";
+    pythonCode << dataSet << "_X = " << dataSet << ".drop([" << targetColWithQuotes << "])\n";
     
     return visitChildren(ctx);
 } 

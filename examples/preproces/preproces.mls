@@ -1,0 +1,35 @@
+# =========================================
+# LOAD DATASET
+# =========================================
+
+LOAD 'examples/data/data1.csv' AS CSV INTO my_dataset;
+
+
+# =========================================
+# BASIC INFO
+# =========================================
+
+SHOW FEATURES FROM my_dataset;
+SHOW COUNT OF ROWS FROM my_dataset;
+
+
+
+DROP NA FROM my_dataset;
+DROP NA FROM my_dataset ON "age", "salary";
+
+
+
+DROP COLUMN "unused_column" FROM my_dataset;
+
+
+
+NORMALIZE my_dataset;
+NORMALIZE my_dataset ON "age", "salary";
+
+
+STANDARDIZE my_dataset;
+STANDARDIZE my_dataset ON "age", "salary";
+
+
+SHOW FEATURES FROM my_dataset;
+SHOW COUNT OF ROWS FROM my_dataset;

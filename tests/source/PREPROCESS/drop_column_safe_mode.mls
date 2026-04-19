@@ -1,0 +1,2 @@
+LOAD 'data.csv' AS CSV INTO my_dataset;
+DROP COLUMN WHERE TYPE = 'string' FROM my_dataset SAFE MODE;

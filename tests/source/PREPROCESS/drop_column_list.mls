@@ -1,0 +1,2 @@
+LOAD 'data.csv' AS CSV INTO my_dataset;
+DROP COLUMN "col1", "col2" FROM my_dataset;
