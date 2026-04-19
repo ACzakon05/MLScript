@@ -77,18 +77,28 @@ condition
        | NOT condition                                   # NotCondition
        | left=condition logicalOperator right=condition  # LogicalCondition
        | expression comparisonOperator expression        # RelationalCondition
+       | expression IN LPAREN (columnList| literalList) RPAREN                # InCondition
        ;
 
 expression
        : COL_NAME  # ColumnReference
        | literal   # LiteralValue
+       | NAME      # NameExpr
+       | TYPE                      # TypeExpr
+       | MISSING_RATE              # MissingRateExpr
+       
+
        ;
 
 literal
        : INTEGER
+       | FLOAT
        | STRING
        | TRUE
        | FALSE
+       ;
+literalList
+       : literal (COMMA literal)*
        ;
 
 // --------------------------------------------------
@@ -125,7 +135,7 @@ dropNaStat
   ;
 
 dropColumnStat
-  : DROP COLUMN COL_NAME FROM IDENTIFIER
+  : DROP COLUMN (columnList| whereClause) FROM IDENTIFIER safeMode?
   ;
 
 normalizeStat
@@ -213,6 +223,9 @@ trainStat
 // --------------------------------------------------
 // Shared
 // --------------------------------------------------
+safeMode
+       : SAFE MODE
+       ;
 
 columnList
        : COL_NAME (COMMA COL_NAME)* 
@@ -334,6 +347,12 @@ COLUMN:      C O L U M N ;
 NA:          N A ;
 NORMALIZE:   N O R M A L I Z E ;
 STANDARDIZE: S T A N D A R D I Z E ;
+NAME:    N A M E ;
+TYPE:    T Y P E ;
+MISSING_RATE: M I S S I N G '_' R A T E ;
+IN:      I N ;
+SAFE:    S A F E ;
+MODE:    M O D E ;
 
 // --------------------------------------------------
 // CREATE MODEL / TRAIN keywords

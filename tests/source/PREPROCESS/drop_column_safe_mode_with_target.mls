@@ -1,0 +1,3 @@
+LOAD 'data.csv' AS CSV INTO my_dataset;
+SET TARGET "target_col" FOR my_dataset;
+DROP COLUMN WHERE TYPE = 'object' FROM my_dataset SAFE MODE;

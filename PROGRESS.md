@@ -31,7 +31,7 @@
 
 * [x] komenda `SET TARGET` wspiera przypisanie kolumny target
 * [ ] obsługa błędów, np. nieistniejąca kolumna
-* [ ] ochrona targetu przed usunięciem w `DROP COLUMN`
+* [x] ochrona targetu przed usunięciem w `DROP COLUMN`
 
 ---
 
@@ -58,9 +58,9 @@
 ### DROP COLUMN
 
 * [x] komenda `DROP COLUMN` usuwa pojedynczą kolumnę
-* [ ] obsługa wielu kolumn w jednej komendzie
-* [ ] tryb bezpieczny (`SAFE MODE`) chroniący np. target
-* [ ] warunkowe usuwanie kolumn (`WHERE TYPE`, `MISSING RATE`)
+* [x] obsługa wielu kolumn w jednej komendzie
+* [x] tryb bezpieczny (`SAFE MODE`) chroniący np. target
+* [x] warunkowe usuwanie kolumn (`WHERE TYPE`, `MISSING RATE`)
 * [ ] obsługa błędów (nieistniejąca kolumna)
 
 ---

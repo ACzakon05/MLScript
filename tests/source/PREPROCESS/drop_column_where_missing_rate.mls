@@ -1,0 +1,2 @@
+LOAD 'data.csv' AS CSV INTO my_dataset;
+DROP COLUMN WHERE MISSING_RATE > 0.5 FROM my_dataset;

@@ -40,3 +40,32 @@ std::string PythonGenerator::applyWhereConditions(MLScriptParser::WhereClauseCon
 
     return "";
 }
+
+std::string PythonGenerator::applyColumnConditions(MLScriptParser::WhereClauseContext *ctx, const std::string& dataSet) {
+    if (!ctx) {
+        return "[]";
+    }
+    
+    isColumnContext = true;
+    std::any condition = visit(ctx->condition());
+    isColumnContext = false;
+
+    if (!condition.has_value()) {
+        return "[]";
+    }
+
+    std::string condStr = std::any_cast<std::string>(condition);
+
+    if (condStr.empty()) {
+        return "[]";
+    }
+
+    // Replace DATASET placeholder with actual dataset name
+    size_t pos = 0;
+    while ((pos = condStr.find("DATASET", pos)) != std::string::npos) {
+        condStr.replace(pos, 7, dataSet);
+        pos += dataSet.length();
+    }
+
+    return "[col for col in " + dataSet + ".columns if " + condStr + "]";
+}

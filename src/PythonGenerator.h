@@ -41,7 +41,7 @@ public:
      */
     std::stringstream pythonCode;
 
-    PythonGenerator(CustomErrorListener& listener) : diagnostics(listener) {}
+    PythonGenerator(CustomErrorListener& listener) : diagnostics(listener), isColumnContext(false) {}
 
     // == Root ==
 
@@ -241,6 +241,24 @@ std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) overr
      */
     std::any visitLiteral(MLScriptParser::LiteralContext *ctx) override;
 
+    /**
+     * @brief Visits NAME expression.
+     * @return string
+     */
+    std::any visitNameExpr(MLScriptParser::NameExprContext *ctx) override;
+
+    /**
+     * @brief Visits TYPE expression.
+     * @return string
+     */
+    std::any visitTypeExpr(MLScriptParser::TypeExprContext *ctx) override;
+
+    /**
+     * @brief Visits MISSING_RATE expression.
+     * @return string
+     */
+    std::any visitMissingRateExpr(MLScriptParser::MissingRateExprContext *ctx) override;
+
     // == Creating a model ==
 
     /**
@@ -376,6 +394,8 @@ private:
      * 
      */
     CustomErrorListener& diagnostics;
+    bool isColumnContext;
+    std::unordered_map<std::string, std::string> targetColumns;
 
     /**
      * @brief Stores options to use when loading files via LOAD command.
@@ -431,4 +451,9 @@ private:
      * @brief Returns a .where Pandas statement if applicable;
      */
     std::string applyWhereConditions(MLScriptParser::WhereClauseContext *ctx);
+
+    /**
+     * @brief Returns a list comprehension for filtering columns based on conditions.
+     */
+    std::string applyColumnConditions(MLScriptParser::WhereClauseContext *ctx, const std::string& dataSet);
 };
