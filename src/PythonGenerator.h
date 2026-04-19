@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <unordered_map>
 
 /**
  * @brief Enum with all file extensions available in MLScript.
@@ -451,6 +452,16 @@ private:
      * @brief Returns a .where Pandas statement if applicable;
      */
     std::string applyWhereConditions(MLScriptParser::WhereClauseContext *ctx);
+
+    /**
+     * @brief Generates Python code checking dataset existence before operations.
+     */
+    std::string getDatasetExistenceCheck(const std::string& dataSet);
+
+    /**
+     * @brief Generates Python code checking that requested columns exist in dataframe.
+     */
+    std::string getColumnsExistenceCheck(const std::string& dataSet, const std::string& columnsVar);
 
     /**
      * @brief Returns a list comprehension for filtering columns based on conditions.

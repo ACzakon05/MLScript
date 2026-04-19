@@ -61,7 +61,9 @@
 * [x] obsługa wielu kolumn w jednej komendzie
 * [x] tryb bezpieczny (`SAFE MODE`) chroniący np. target
 * [x] warunkowe usuwanie kolumn (`WHERE TYPE`, `MISSING RATE`)
-* [ ] obsługa błędów (nieistniejąca kolumna)
+* [x] uniwersalny check datasetu i kolumn przed wykonaniem operacji
+* [x] walidacja datasetu i listy kolumn przed wykonaniem operacji
+
 
 ---
 
