@@ -41,6 +41,18 @@ std::string PythonGenerator::applyWhereConditions(MLScriptParser::WhereClauseCon
     return "";
 }
 
+std::string PythonGenerator::getDatasetExistenceCheck(const std::string& dataSet) {
+    return "if '" + dataSet + "' not in globals() and '" + dataSet + "' not in locals():\n"
+           "    raise NameError(\"Dataset " + dataSet + " not found\")\n";
+}
+
+std::string PythonGenerator::getColumnsExistenceCheck(const std::string& dataSet, const std::string& columnsVar) {
+    return columnsVar + " = list(" + columnsVar + ")\n"
+           "missing = [c for c in " + columnsVar + " if c not in " + dataSet + ".columns]\n"
+           "if missing:\n"
+           "    raise KeyError(f\"Columns not found: {missing}\")\n";
+}
+
 std::string PythonGenerator::applyColumnConditions(MLScriptParser::WhereClauseContext *ctx, const std::string& dataSet) {
     if (!ctx) {
         return "[]";
