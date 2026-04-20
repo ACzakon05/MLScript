@@ -139,8 +139,45 @@ dropColumnStat
   ;
 
 normalizeStat
-  : NORMALIZE IDENTIFIER (ON columnList)?
+  : NORMALIZE IDENTIFIER
+    (ON columnList)?
+    (WITH normalizeOptions)?
   ;
+
+normalizeOptions
+  : methodOption
+    (COMMA rangeOption)?
+    (COMMA handleOption)?
+  ;
+
+methodOption
+  : METHOD methodType
+  ;
+
+methodType
+  : MINMAX
+  | ROBUST
+  ;
+
+rangeOption
+  : RANGE rangeType
+  ;
+
+rangeType
+  : ZERO_ONE
+  | MINUS_ONE_ONE
+  ;
+
+handleOption
+  : HANDLE handleType
+  ;
+
+handleType
+  : DROP_NA
+  | FILL_MEAN
+  | FILL_MEDIAN
+  ;
+
 
 standardizeStat
   : STANDARDIZE IDENTIFIER (ON columnList)?
@@ -353,6 +390,16 @@ MISSING_RATE: M I S S I N G '_' R A T E ;
 IN:      I N ;
 SAFE:    S A F E ;
 MODE:    M O D E ;
+METHOD: M E T H O D ;
+RANGE: R A N G E ;
+HANDLE: H A N D L E ;
+MINMAX: M I N M A X ;
+ROBUST: R O B U S T ;
+ZERO_ONE: Z E R O '_' O N E ;
+MINUS_ONE_ONE: M I N U S '_' O N E '_' O N E ;
+DROP_NA: D R O P '_' N A;
+FILL_MEAN: F I L L '_' M E A N ;
+FILL_MEDIAN: F I L L '_' M E D I A N ;
 
 // --------------------------------------------------
 // CREATE MODEL / TRAIN keywords

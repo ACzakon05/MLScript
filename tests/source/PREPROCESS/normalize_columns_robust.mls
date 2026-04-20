@@ -1,0 +1,1 @@
+NORMALIZE my_dataset ON "age", "salary" WITH METHOD ROBUST;

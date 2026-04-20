@@ -53,19 +53,77 @@ std::any PythonGenerator::visitDropColumnStat(MLScriptParser::DropColumnStatCont
 }
 
 std::any PythonGenerator::visitNormalizeStat(MLScriptParser::NormalizeStatContext *ctx) {
-    std:: string dataSet = ctx->IDENTIFIER()->getText();
-    pythonCode << "# Normalize dataset (min-max scaling) "  << "\n";
-    if (ctx->columnList()){
-        std::string columns = getColumnList(ctx->columnList());
-        pythonCode<< "cols= [" << columns << "]\n";
-        pythonCode<<dataSet << "[cols] = (" << dataSet << "[cols] - " << dataSet << "[cols].min()) / (" << dataSet << "[cols].max() - " << dataSet << "[cols].min())\n";
+    std::string dataSet = ctx->IDENTIFIER()->getText();
+    pythonCode << "# Normalize dataset\n";
+    pythonCode << getDatasetExistenceCheck(dataSet);
 
-    }
-    else{
-        pythonCode << dataSet << " = (" << dataSet << " - " << dataSet << ".min()) / (" << dataSet << ".max() - " << dataSet << ".min())\n";    
+    std::string method = "min-max";
+    std::string rangeType = "0_1";
+    std::string handle = "none";
+
+    if (ctx->normalizeOptions()) {
+        auto options = ctx->normalizeOptions();
+        if (options->methodOption()) {
+            auto m = options->methodOption()->methodType();
+            if (m->MINMAX()) method = "min-max";
+            else if (m->ROBUST()) method = "robust";
+        }
+        if (options->rangeOption()) {
+            auto r = options->rangeOption()->rangeType();
+            if (r->ZERO_ONE()) rangeType = "0_1";
+            else if (r->MINUS_ONE_ONE()) rangeType = "-1_1";
+        }
+        if (options->handleOption()) {
+            auto h = options->handleOption()->handleType();
+            if (h->DROP_NA()) handle = "drop_na";
+            else if (h->FILL_MEAN()) handle = "fill_mean";
+            else if (h->FILL_MEDIAN()) handle = "fill_median";
+        }
     }
 
-    return visitChildren(ctx);    
+    pythonCode << "import numpy as np\n";
+    pythonCode << dataSet << " = " << dataSet << ".replace([np.inf, -np.inf], np.nan)\n";
+
+    if (handle == "fill_mean") {
+        pythonCode << dataSet << " = " << dataSet << ".apply(lambda col: col.fillna(col.mean()) if np.issubdtype(col.dtype, np.number) else col)\n";
+    } else if (handle == "fill_median") {
+        pythonCode << dataSet << " = " << dataSet << ".apply(lambda col: col.fillna(col.median()) if np.issubdtype(col.dtype, np.number) else col)\n";
+    } else if (handle == "drop_na") {
+        pythonCode << dataSet << " = " << dataSet << ".dropna()\n";
+    }
+
+    if (ctx->columnList()) {
+        std::string columnsToNormalize = getColumnList(ctx->columnList());
+        pythonCode << getColumnsExistenceCheck(dataSet, "columns_to_normalize");
+        pythonCode << "cols_to_normalize = [" << columnsToNormalize << "]\n";
+        if (method == "min-max") {
+            if (rangeType == "0_1") {
+                pythonCode << dataSet << "[cols_to_normalize] = (" << dataSet << "[cols_to_normalize] - " << dataSet << "[cols_to_normalize].min()) / (" << dataSet << "[cols_to_normalize].max() - " << dataSet << "[cols_to_normalize].min() + 1e-9)\n";
+            } else {
+                pythonCode << dataSet << "[cols_to_normalize] = 2 * ((" << dataSet << "[cols_to_normalize] - " << dataSet << "[cols_to_normalize].min()) / (" << dataSet << "[cols_to_normalize].max() - " << dataSet << "[cols_to_normalize].min() + 1e-9)) - 1\n";
+            }
+        } else {
+            pythonCode << "from sklearn.preprocessing import RobustScaler\n";
+            pythonCode << "scaler = RobustScaler()\n";
+            pythonCode << dataSet << "[cols_to_normalize] = scaler.fit_transform(" << dataSet << "[cols_to_normalize])\n";
+        }
+    } else {
+        if (method == "min-max") {
+            pythonCode << "numeric_cols = " << dataSet << ".select_dtypes(include=[np.number]).columns\n";
+            if (rangeType == "0_1") {
+                pythonCode << dataSet << "[numeric_cols] = (" << dataSet << "[numeric_cols] - " << dataSet << "[numeric_cols].min()) / (" << dataSet << "[numeric_cols].max() - " << dataSet << "[numeric_cols].min() + 1e-9)\n";
+            } else {
+                pythonCode << dataSet << "[numeric_cols] = 2 * ((" << dataSet << "[numeric_cols] - " << dataSet << "[numeric_cols].min()) / (" << dataSet << "[numeric_cols].max() - " << dataSet << "[numeric_cols].min() + 1e-9)) - 1\n";
+            }
+        } else {
+            pythonCode << "from sklearn.preprocessing import RobustScaler\n";
+            pythonCode << "scaler = RobustScaler()\n";
+            pythonCode << "numeric_cols = " << dataSet << ".select_dtypes(include=[np.number]).columns\n";
+            pythonCode << dataSet << "[numeric_cols] = scaler.fit_transform(" << dataSet << "[numeric_cols])\n";
+        }
+    }
+
+    return visitChildren(ctx);
 }
 
 std::any PythonGenerator::visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) {
