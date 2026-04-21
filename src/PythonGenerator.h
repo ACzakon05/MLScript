@@ -340,6 +340,38 @@ std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) overr
      * @brief
      */
     std::any visitRidgeParamPositive(MLScriptParser::RidgeParamPositiveContext *ctx) override;
+
+    // KNN Regressor
+
+    /**
+     * @brief
+     */
+    std::any visitCreateModelKNNReg(MLScriptParser::CreateModelKNNRegContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitKnnParamsList(MLScriptParser::KnnParamsListContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitKNNRegParamNNeighbors(MLScriptParser::KNNRegParamNNeighborsContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitKNNRegParamWeights(MLScriptParser::KNNRegParamWeightsContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitKNNParamAlgo(MLScriptParser::KNNParamAlgoContext *ctx) override;
+
+    /**
+     * @brief
+     */
+    std::any visitKNNParamNJobs(MLScriptParser::KNNParamNJobsContext *ctx) override;
     
     // SVC
 

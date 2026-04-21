@@ -1,0 +1,1 @@
+create model knn_reg choose knn_regression with n_neighbors 4, n_jobs -1;

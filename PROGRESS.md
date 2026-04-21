@@ -105,6 +105,7 @@
 * [x] wspiera `LinearRegression` wraz z parametrami
 * [x] wspiera `SVC` wraz z parametrami
 * [x] wspiera `Ridge` wraz z parametrami
+* [x] wspiera `KNeighborsRegression` wraz z parametrami
 * [ ] wspiera inne modele
 * [x] naprawa błedu, gdzie `CREATE` wymaga `WITH` nawet bez parametrów
 * [x] możliwość zamiany kolejności parametrów

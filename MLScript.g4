@@ -195,6 +195,7 @@ modelDefinition
        : LINEAR_REGRESSION (WITH linearRegressionParamsList)?  # CreateModelLinReg
        | SVC               (WITH svcParamsList)?               # CreateModelSVC
        | RIDGE             (WITH ridgeParamsList)?             # CreateModelRidge
+       | KNN_REGRESSION    (WITH knnParamsList)?               # CreateModelKNNReg
        ;
 
 // == Regressors
@@ -225,6 +226,19 @@ ridgeModelParamWithVal
        | TOL            val=numeric          # RidgeParamTol
        | SOLVER         val=STRING           # RidgeParamSolver
        | POSITIVE       val=(TRUE | FALSE)?  # RidgeParamPositive
+       ;
+
+// KNN Regressor
+
+knnParamsList
+       : knnModelParamWithVal (COMMA knnModelParamWithVal)*
+       ;
+
+knnModelParamWithVal
+       : N_NEIGHBORS val=INTEGER  # KNNRegParamNNeighbors
+       | WEIGHTS     val=STRING   # KNNRegParamWeights
+       | ALGORITHM   val=STRING   # KNNParamAlgo
+       | N_JOBS      val=INTEGER  # KNNParamNJobs
        ;
 
 // == Classifiers
@@ -414,6 +428,7 @@ TRAIN:  T R A I N ;
 
 LINEAR_REGRESSION: L I N E A R '_' R E G R E S S I O N ;
 RIDGE:             R I D G E ;
+KNN_REGRESSION:    K N N '_' R E G R E S S I O N ;
 SVC:               S V C ;
 
 // Shared model params
@@ -428,6 +443,12 @@ TOL:            T O L ;
 
 ALPHA:  A L P H A ;
 SOLVER: S O L V E R ;
+
+// KNN Regression params
+
+N_NEIGHBORS:  N '_' N E I G H B O R S ;
+WEIGHTS:      W E I G H T S ;
+ALGORITHM:    A L G O R I T H M ;
 
 // SVC params
 
