@@ -1,9 +1,9 @@
 #pragma once
 #include "MLScriptBaseVisitor.h"
 #include "CustomErrorListener.h"
+#include "semantics/SymbolTable.h"
 #include <sstream>
 #include <string>
-#include <iostream>
 #include <unordered_map>
 
 /**
@@ -42,7 +42,7 @@ public:
      */
     std::stringstream pythonCode;
 
-    PythonGenerator(CustomErrorListener& listener) : diagnostics(listener), isColumnContext(false) {}
+    PythonGenerator(CustomErrorListener& listener) : diagnostics(listener), isColumnContext(false), symbolTable(listener) {}
 
     // == Root ==
 
@@ -402,6 +402,8 @@ private:
      * @brief Stores options to use when loading files via LOAD command.
      */
     LoadConfig loadConfig;
+
+    SymbolTable symbolTable;
 
     /**
      * @brief Stores currently processed identifier;

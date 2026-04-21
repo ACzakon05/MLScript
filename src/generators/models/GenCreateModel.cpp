@@ -1,9 +1,18 @@
 #include "PythonGenerator.h"
 #include "model/modelDefinition/ModelDefinition.h"
 #include "utils/ModelParamParseUtil.h"
+#include "semantics/SymbolTable.h"
 
 std::any PythonGenerator::visitCreateModelStat(MLScriptParser::CreateModelStatContext *ctx) {
     std::string modelName = ctx->IDENTIFIER()->getText();
+    size_t line = ctx->getStart()->getLine();
+    size_t col = ctx->getStart()->getCharPositionInLine();
+
+    symbolTable.addVariable(
+        modelName,
+        VariableMetadata{mls::VariableType::MODEL, modelName},
+        line, col
+    );
 
     pythonCode << modelName << " = ";
 
@@ -14,9 +23,6 @@ std::any PythonGenerator::visitCreateModelStat(MLScriptParser::CreateModelStatCo
 
         modelDefinition->toScikit(pythonCode);
     } catch (const std::bad_any_cast& e) {
-        size_t line = ctx->getStart()->getLine();
-        size_t col = ctx->getStart()->getCharPositionInLine();
-
         diagnostics.reportSemanticError(line, col, "Expected a ModelDefinition in Model generation");
     }
 

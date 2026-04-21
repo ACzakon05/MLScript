@@ -13,6 +13,24 @@ std::any PythonGenerator::visitShowStat(MLScriptParser::ShowStatContext *ctx) {
 std::any PythonGenerator::visitShowDataset(MLScriptParser::ShowDatasetContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
 
+    if (!symbolTable.exists(varName)) {
+        size_t line = ctx->getStart()->getLine();
+        size_t col = ctx->getStart()->getCharPositionInLine();
+        std::string message = "Trying to display uninitialized DATASET" + varName;
+
+        diagnostics.reportSemanticWarning(line, col, message);
+    } else {
+        VariableMetadata meta = symbolTable.get(varName);
+
+        if (meta.type != mls::VariableType::DATASET) {
+            size_t line = ctx->getStart()->getLine();
+            size_t col = ctx->getStart()->getCharPositionInLine();
+            std::string message = "Trying to display variable " + varName + " that has type " + mls::to_string(meta.type) + " (expected DATASET).";
+
+            diagnostics.reportSemanticWarning(line, col, message);
+        }
+    }
+
     currentVarName = varName;
 
     pythonCode << varName;
@@ -25,6 +43,24 @@ std::any PythonGenerator::visitShowFeatures(MLScriptParser::ShowFeaturesContext 
     std::string varName = ctx->IDENTIFIER()->getText();
     currentVarName = varName;
 
+    if (!symbolTable.exists(varName)) {
+        size_t line = ctx->getStart()->getLine();
+        size_t col = ctx->getStart()->getCharPositionInLine();
+        std::string message = "Trying to display FEATURES from an uninitialized DATASET " + varName + ".";
+ 
+        diagnostics.reportSemanticWarning(line, col, message);
+    } else {
+        VariableMetadata meta = symbolTable.get(varName);
+
+        if (meta.type != mls::VariableType::DATASET) {
+            size_t line = ctx->getStart()->getLine();
+            size_t col = ctx->getStart()->getCharPositionInLine();
+            std::string message = "Trying to display FEATURES from variable " + varName + " that has type " + mls::to_string(meta.type) + " (expected DATASET).";
+
+            diagnostics.reportSemanticWarning(line, col, message);
+        }
+    }
+
     pythonCode << "f'Columns in " << varName << ": {" << varName << ".columns.tolist()}'"; 
 
     return {};
@@ -34,6 +70,24 @@ std::any PythonGenerator::visitShowCount(MLScriptParser::ShowCountContext *ctx) 
     std::string varName = ctx->IDENTIFIER()->getText();
 
     currentVarName = varName;
+
+    if (!symbolTable.exists(varName)) {
+        size_t line = ctx->getStart()->getLine();
+        size_t col = ctx->getStart()->getCharPositionInLine();
+        std::string message = "Trying to display COUNT from an uninitialized DATASET " + varName + ".";
+ 
+        diagnostics.reportSemanticWarning(line, col, message);
+    } else {
+        VariableMetadata meta = symbolTable.get(varName);
+
+        if (meta.type != mls::VariableType::DATASET) {
+            size_t line = ctx->getStart()->getLine();
+            size_t col = ctx->getStart()->getCharPositionInLine();
+            std::string message = "Trying to display COUNT from variable " + varName + " that has type " + mls::to_string(meta.type) + " (expected DATASET).";
+
+            diagnostics.reportSemanticWarning(line, col, message);
+        }
+    }
 
     if (ctx->FEATURES()) {
         pythonCode << "f'Numer of features in " << varName << ": {len(" << varName << ".columns)}'";
