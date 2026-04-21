@@ -1,9 +1,19 @@
 #include "PythonGenerator.h"
 
+#include "semantics/SymbolTable.h"
+
 std::any PythonGenerator::visitLoadStat(MLScriptParser::LoadStatContext *ctx) {
     std::string varName = ctx->IDENTIFIER()->getText();
     std::string filePath = ctx->STRING()->getText();
     std::stringstream loadOptions;
+    size_t line = ctx->getStart()->getLine();
+    size_t col = ctx->getStart()->getCharPositionInLine();
+
+    symbolTable.addVariable(
+        varName,
+        VariableMetadata{mls::VariableType::DATASET, varName},
+        line, col
+    );
 
     std::string rawFilePath = filePath;
     if (rawFilePath.length() >= 2 && rawFilePath.front() == '\'') {
