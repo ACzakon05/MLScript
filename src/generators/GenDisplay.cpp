@@ -171,7 +171,7 @@ std::any PythonGenerator::visitShowAggFunc(MLScriptParser::ShowAggFuncContext *c
 
     pythonCode << varName << "[[" << getColumnList(ctx->columnList()) << "]]";
     pythonCode << applyWhereConditions(ctx->whereClause());
-    pythonCode << ".agg(['" << aggFuncMap.at(aggFunc) << "'])";
+    pythonCode << ".agg(['" << mlscript::aggFuncMap.at(aggFunc) << "'])";
 
     return {};
 }

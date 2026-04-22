@@ -35,20 +35,20 @@ std::any PythonGenerator::visitLoadStat(MLScriptParser::LoadStatContext *ctx) {
 
     switch (loadConfig.fileFormat)
     {
-    case fileExtension::CSV:
+    case mlscript::fileExtension::CSV:
         loadOptions << "csv(\n";
         loadOptions << "\t\tfilepath_or_buffer=" << filePath << ",\n";
         loadOptions << "\t\tdelimiter=\"" << loadConfig.delimiter << "\",\n";
         loadOptions << "\t\theader=\"" << loadConfig.headerOption << "\"\n";
         loadOptions << "\t)\n";
         break;
-    case fileExtension::JSON:
+    case mlscript::fileExtension::JSON:
         loadOptions << "json(\n";
         loadOptions << "\t\tpath_or_buf=" << filePath << ",\n";
         loadOptions << "\t\torient=" << loadConfig.orient << "\n";
         loadOptions << "\t)\n";
         break;
-    case fileExtension::PKL:
+    case mlscript::fileExtension::PKL:
         loadOptions << "pickle(\n";
         loadOptions << "\t\tfilepath_or_buffer=" << filePath << "\n";
         loadOptions << "\t)\n";
@@ -117,7 +117,7 @@ std::any PythonGenerator::visitLoadCSVFile(MLScriptParser::LoadCSVFileContext *c
 
     loadConfig.delimiter = delimiter;
     loadConfig.headerOption = keepHeader;
-    loadConfig.fileFormat = fileExtension::CSV;
+    loadConfig.fileFormat = mlscript::fileExtension::CSV;
 
     return {};
 }
@@ -130,13 +130,13 @@ std::any PythonGenerator::visitLoadJSONFile(MLScriptParser::LoadJSONFileContext 
     }
 
     loadConfig.orient = orient;
-    loadConfig.fileFormat = fileExtension::JSON;
+    loadConfig.fileFormat = mlscript::fileExtension::JSON;
 
     return {};
 }
 
 std::any PythonGenerator::visitLoadPKLFile(MLScriptParser::LoadPKLFileContext *ctx) {
-    loadConfig.fileFormat = fileExtension::PKL;
+    loadConfig.fileFormat = mlscript::fileExtension::PKL;
 
     return {};
 }

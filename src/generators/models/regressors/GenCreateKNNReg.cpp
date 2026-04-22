@@ -33,17 +33,17 @@ std::any PythonGenerator::visitKnnParamsList(MLScriptParser::KnnParamsListContex
 }
 
 std::any PythonGenerator::visitKNNRegParamNNeighbors(MLScriptParser::KNNRegParamNNeighborsContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("nneighbors", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("nneighbors", ctx);
 }
 
 std::any PythonGenerator::visitKNNRegParamWeights(MLScriptParser::KNNRegParamWeightsContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("weights", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("weights", ctx);
 }
 
 std::any PythonGenerator::visitKNNParamAlgo(MLScriptParser::KNNParamAlgoContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("algorithm", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("algorithm", ctx);
 }
 
 std::any PythonGenerator::visitKNNParamNJobs(MLScriptParser::KNNParamNJobsContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("njobs", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("njobs", ctx);
 }

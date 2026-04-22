@@ -33,17 +33,17 @@ std::any PythonGenerator::visitLinearRegressionParamsList(MLScriptParser::Linear
 }
 
 std::any PythonGenerator::visitLinRegParamFitIntercept(MLScriptParser::LinRegParamFitInterceptContext *ctx) {
-    return ModelParamParseUtil::parseBooleanParam("fitintercept", ctx);
+    return mlscript::ModelParamParseUtil::parseBooleanParam("fitintercept", ctx);
 }
 
 std::any PythonGenerator::visitLinRegParamTol(MLScriptParser::LinRegParamTolContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("tol", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("tol", ctx);
 }
 
 std::any PythonGenerator::visitLinRegParamNJobs(MLScriptParser::LinRegParamNJobsContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("njobs", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("njobs", ctx);
 }
 
 std::any PythonGenerator::visitLinRegParamPositive(MLScriptParser::LinRegParamPositiveContext *ctx) {
-    return ModelParamParseUtil::parseBooleanParam("positive", ctx);
+    return mlscript::ModelParamParseUtil::parseBooleanParam("positive", ctx);
 }

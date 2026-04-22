@@ -33,25 +33,25 @@ std::any PythonGenerator::visitSvcParamsList(MLScriptParser::SvcParamsListContex
 }
 
 std::any PythonGenerator::visitSvcParamC(MLScriptParser::SvcParamCContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("c", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("c", ctx);
 }
 
 std::any PythonGenerator::visitSvcParamKernel(MLScriptParser::SvcParamKernelContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("kernel", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("kernel", ctx);
 }
 
 std::any PythonGenerator::visitSvcParamDegree(MLScriptParser::SvcParamDegreeContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("degree", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("degree", ctx);
 }
 
 std::any PythonGenerator::visitSvcParamGamma(MLScriptParser::SvcParamGammaContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("gamma", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("gamma", ctx);
 }
 
 std::any PythonGenerator::visitSvcParamCoef0(MLScriptParser::SvcParamCoef0Context *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("coef0", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("coef0", ctx);
 }
 
 std::any PythonGenerator::visitSvcParamProbability(MLScriptParser::SvcParamProbabilityContext *ctx) {
-    return ModelParamParseUtil::parseBooleanParam("probability", ctx);
+    return mlscript::ModelParamParseUtil::parseBooleanParam("probability", ctx);
 }
