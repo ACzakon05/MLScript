@@ -33,25 +33,25 @@ std::any PythonGenerator::visitRidgeParamsList(MLScriptParser::RidgeParamsListCo
 }
 
 std::any PythonGenerator::visitRidgeParamAlpha(MLScriptParser::RidgeParamAlphaContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("alpha", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("alpha", ctx);
 }
 
 std::any PythonGenerator::visitRidgeParamFitIntercept(MLScriptParser::RidgeParamFitInterceptContext *ctx) {
-    return ModelParamParseUtil::parseBooleanParam("fitintercept", ctx);
+    return mlscript::ModelParamParseUtil::parseBooleanParam("fitintercept", ctx);
 }
 
 std::any PythonGenerator::visitRidgeParamMaxIter(MLScriptParser::RidgeParamMaxIterContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("maxiter", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("maxiter", ctx);
 }
 
 std::any PythonGenerator::visitRidgeParamTol(MLScriptParser::RidgeParamTolContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("tol", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("tol", ctx);
 }
 
 std::any PythonGenerator::visitRidgeParamSolver(MLScriptParser::RidgeParamSolverContext *ctx) {
-    return ModelParamParseUtil::parseAlNumParam("solver", ctx);
+    return mlscript::ModelParamParseUtil::parseAlNumParam("solver", ctx);
 }
 
 std::any PythonGenerator::visitRidgeParamPositive(MLScriptParser::RidgeParamPositiveContext *ctx) {
-    return ModelParamParseUtil::parseBooleanParam("positive", ctx);
+    return mlscript::ModelParamParseUtil::parseBooleanParam("positive", ctx);
 }

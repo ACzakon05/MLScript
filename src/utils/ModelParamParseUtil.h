@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 
-namespace ModelParamParseUtil {
+namespace mlscript::ModelParamParseUtil {
     template <typename T>
     std::pair<std::string, std::string> parseBooleanParam(std::string paramName, T *ctx) {
         if (ctx->val == nullptr) {

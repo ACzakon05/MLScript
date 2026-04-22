@@ -2,33 +2,10 @@
 #include "MLScriptBaseVisitor.h"
 #include "CustomErrorListener.h"
 #include "semantics/SymbolTable.h"
+#include "GeneratorConfig.h"
 #include <sstream>
 #include <string>
 #include <unordered_map>
-
-/**
- * @brief Enum with all file extensions available in MLScript.
- */
-enum fileExtension {
-    CSV,
-    SQL,
-    JSON,
-    PKL
-};
-
-/**
- * @brief Stores load options for LOAD command.
- */
-struct LoadConfig {
-    std::string filePath;
-    fileExtension fileFormat = fileExtension::CSV;
-    std::string delimiter;
-    std::string headerOption;
-    std::string columnsToKeep;
-    std::string columnsToDiscard;
-    std::string nrows;
-    std::string orient;
-};
 
 class PythonGenerator : public MLScriptBaseVisitor {
 public:
@@ -178,17 +155,16 @@ public:
      */
     std::any visitNormalizeStat(MLScriptParser::NormalizeStatContext *ctx) override;
 
-/**
- * @brief Standardizes dataset values to mean 0 and standard deviation 1.
- * If ON clause is used, only selected columns are standardized.
- * Otherwise, all numeric columns are processed.
- * Example: STANDARDIZE my_dataset ON "col1", "col2";
- * Example: STANDARDIZE my_dataset;
- */
-std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) override;
+    /**
+     * @brief Standardizes dataset values to mean 0 and standard deviation 1.
+     * If ON clause is used, only selected columns are standardized.
+     * Otherwise, all numeric columns are processed.
+     * Example: STANDARDIZE my_dataset ON "col1", "col2";
+     * Example: STANDARDIZE my_dataset;
+     */
+    std::any visitStandardizeStat(MLScriptParser::StandardizeStatContext *ctx) override;
 
-
-
+    
     // == Conditions ==
     
     /**
@@ -427,55 +403,34 @@ private:
      * 
      */
     CustomErrorListener& diagnostics;
+
+    /**
+     * @brief
+     * 
+     */
     bool isColumnContext;
+
+    /**
+     * @brief
+     * 
+     */
     std::unordered_map<std::string, std::string> targetColumns;
 
     /**
      * @brief Stores options to use when loading files via LOAD command.
      */
-    LoadConfig loadConfig;
+    mlscript::LoadConfig loadConfig;
 
+    /**
+     * @brief
+     * 
+     */
     SymbolTable symbolTable;
 
     /**
      * @brief Stores currently processed identifier;
      */
     std::string currentVarName;
-
-    /**
-     * @brief Maps lowercase file formats from grammar to pandas equivalent.
-     */
-    std::unordered_map<std::string, std::string> fileFormatMap = {
-        {"csv", "csv"},
-        {"sql", "sql_table"},
-        {"pkl", "pickle"},
-        {"json", "json"},
-        {"html", "html"}
-    };
-
-    /**
-     * @brief Maps lowercase aggregation function keywords from grammar to pandas functions.
-     */
-    std::unordered_map<std::string, std::string> aggFuncMap = {
-        {"mean", "mean"},
-        {"max", "max"},
-        {"min", "min"},
-        {"sum", "sum"},
-        {"median", "median"},
-        {"prod", "prod"},
-        {"std", "std"},
-        {"var", "var"},
-        {"unique_vals", "unique"},
-        {"unique_count", "nunique"}
-    };
-
-    /**
-     * @brief Maps lowercase model names from grammar to Scikit equivalent.
-     */
-    std::unordered_map<std::string, std::string> modelNameMap = {
-        {"linear_regression", "LinearRegression"},
-        {"naive_bayes", "MultinomialNB"}
-    };
 
     /**
      * @brief Retrieves a list of columns in a string format.
