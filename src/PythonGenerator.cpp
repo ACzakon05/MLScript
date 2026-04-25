@@ -5,6 +5,7 @@
 std::any PythonGenerator::visitProg(MLScriptParser::ProgContext *ctx) {
     pythonHeader << "import pandas as pd\n";
     pythonHeader << "from mlscript_runtime.error_handling.safe_execute_load import safe_execute_load\n";
+    pythonHeader << "from mlscript_runtime.error_handling.safe_execute_show import safe_execute_show\n";
 
     return visitChildren(ctx);
 }
