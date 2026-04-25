@@ -2,10 +2,29 @@
 #include "CustomErrorListener.h"
 
 std::any PythonGenerator::visitTrainStat(MLScriptParser::TrainStatContext *ctx) {
-    std::string modelName = std::any_cast<std::string>(ctx->modelName->getText());
-    std::string trainSet = std::any_cast<std::string>(ctx->trainSet->getText());
+    std::string modelName = ctx->modelName->getText();
+    std::string trainSet = ctx->trainSet->getText();
 
-    pythonCode << modelName << ".fit(" << trainSet << "_X, " << trainSet << "_y)\n";
+    if (!symbolTable.exists(modelName)) {
+        size_t line = ctx->getStart()->getLine();
+        size_t col = ctx->getStart()->getCharPositionInLine();
+
+        diagnostics.reportSemanticError(line, col, "Model " + modelName + " has not been created.");
+        return {};
+    }
+
+    mls::VariableType modelType = symbolTable.get(modelName).type;
+    if (modelType != mls::VariableType::MODEL) {
+        size_t line = ctx->getStart()->getLine();
+        size_t col = ctx->getStart()->getCharPositionInLine();
+
+        diagnostics.reportSemanticWarning(line, col, "Trying to train object " + modelName + " of type " + mls::to_string(modelType) + " (expected MODEL).");
+    }
+
+    std::string trainSetTarget = trainSet + "_y";
+    std::string trainSetData = trainSet + "_X";
+
+    pythonCode << modelName << ".fit(" << trainSetData << ", " <<trainSetTarget << ")\n";
 
     return {};
 }
