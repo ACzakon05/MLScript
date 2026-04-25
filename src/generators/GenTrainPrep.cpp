@@ -6,8 +6,36 @@ std::any PythonGenerator::visitSetTargetStat(MLScriptParser::SetTargetStatContex
     std::string targetCol = targetColWithQuotes.substr(1, targetColWithQuotes.size() - 2); // Remove quotes
     targetColumns[dataSet] = targetCol;
     pythonCode<< "#Set target column for " << dataSet << ": " << targetCol << "\n";
+
+    size_t line = ctx->getStart()->getLine();
+    size_t col = ctx->getStart()->getCharPositionInLine();
+
+    if (!symbolTable.exists(dataSet)) {
+        diagnostics.reportSemanticError(line, col, "Trying to set target for " + dataSet + " which hasn't been declared.");
+        return {};
+    }
+
+    mls::VariableType dataSetType = symbolTable.get(dataSet).type;
+    if (dataSetType != mls::VariableType::DATASET) {
+        diagnostics.reportSemanticWarning(line, col, "Trying to set target for " + dataSet + " of type " + mls::to_string(dataSetType) + " (expected DATASET).");
+    }
+
+    std::string targetVarName = dataSet + "_y";
+    VariableMetadata targetMeta{
+        dataSetType,
+        dataSet
+    };
+    symbolTable.addVariable(targetVarName, targetMeta, line, col);
+
+    std::string dataVarName = dataSet + "_X";
+    VariableMetadata dataMeta{
+        dataSetType,
+        dataSet
+    };
+    symbolTable.addVariable(dataVarName, dataMeta, line, col);
+
     pythonCode << dataSet << "_y = " << dataSet << "[" << targetColWithQuotes << "]\n";
-    pythonCode << dataSet << "_X = " << dataSet << ".drop([" << targetColWithQuotes << "])\n";
+    pythonCode << dataSet << "_X = " << dataSet << ".drop([" << targetColWithQuotes << "], axis=1)\n";
     
     return visitChildren(ctx);
 } 
@@ -38,6 +66,39 @@ std::any PythonGenerator::visitSplitStat(MLScriptParser:: SplitStatContext *ctx)
     } else if (ctx->FALSE()) {
         shuffle = "False";
     }
+
+    size_t line = ctx->getStart()->getLine();
+    size_t col = ctx->getStart()->getCharPositionInLine();
+
+    if (!symbolTable.exists(dataSet)) {
+        diagnostics.reportSemanticError(line, col, "Trying to split " + dataSet + " which does not exist."); 
+        return {};
+    }
+
+    std::string targetVarName = dataSet + "_y";
+    std::string dataVarName = dataSet + "_X";
+    if (!symbolTable.exists(targetVarName) || !symbolTable.exists(dataVarName)) {
+        diagnostics.reportSemanticError(line, col, "You first must set target for " + dataSet + ".");
+        return {};
+    }
+
+    mls::VariableType dataSetType = symbolTable.get(dataSet).type;
+    if (dataSetType != mls::VariableType::DATASET) {
+        diagnostics.reportSemanticWarning(line, col, "Trying to split " + dataSet + " of type " + mls::to_string(dataSetType) + " (excpected DATASET).");
+    }
+
+    VariableMetadata trainTargetMeta{dataSetType, dataSet + "_y"};
+    VariableMetadata trainDataMeta{dataSetType, dataSet + "_X"};
+    VariableMetadata testTargetMeta{dataSetType, dataSet + "_y"};
+    VariableMetadata testDataMeta{dataSetType, dataSet + "_X"};
+
+    symbolTable.addVariable(trainSubset, {dataSetType, dataSet}, line, col);
+    symbolTable.addVariable(trainSubset + "_y", trainTargetMeta, line, col);
+    symbolTable.addVariable(trainSubset + "_X", trainDataMeta, line, col);
+
+    symbolTable.addVariable(testSubset, {dataSetType, dataSet}, line, col);
+    symbolTable.addVariable(testSubset + "_y", testTargetMeta, line, col);
+    symbolTable.addVariable(testSubset + "_X", testDataMeta, line, col);
     
     pythonCode << "# Split dataset into train and test\n";
     pythonHeader << "from sklearn.model_selection import train_test_split\n";
