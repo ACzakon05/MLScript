@@ -21,10 +21,11 @@ std::any PythonGenerator::visitTrainStat(MLScriptParser::TrainStatContext *ctx) 
         diagnostics.reportSemanticWarning(line, col, "Trying to train object " + modelName + " of type " + mls::to_string(modelType) + " (expected MODEL).");
     }
 
-    std::string trainSetTarget = trainSet + "_y";
-    std::string trainSetData = trainSet + "_X";
-
-    pythonCode << modelName << ".fit(" << trainSetData << ", " <<trainSetTarget << ")\n";
+    std::string targetCol = symbolTable.get(trainSet).targetColumnName;
+    
+    pythonCode << "X_train = " << trainSet << ".drop(columns=['" << targetCol << "'])\n";
+    pythonCode << "y_train = " << trainSet << "['" << targetCol << "']\n";
+    pythonCode << modelName << ".fit(X_train, y_train)\n";
 
     return {};
 }
