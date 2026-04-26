@@ -14,6 +14,14 @@ void SymbolTable::addVariable(const std::string& name, VariableMetadata meta, si
     }
 }
 
+void SymbolTable::updateVariable(const std::string& name, VariableMetadata meta) {
+    auto it = symbols.find(name);
+
+    if (it != symbols.end()) {
+        it->second = std::move(meta);
+    }
+}
+
 bool SymbolTable::exists(const std::string& name) {
     auto it = symbols.find(name);
 
