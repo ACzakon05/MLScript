@@ -13,6 +13,14 @@ std::any PythonGenerator::visitTrainStat(MLScriptParser::TrainStatContext *ctx) 
         return {};
     }
 
+    if (!symbolTable.exists(trainSet)) {
+        size_t line = ctx->getStart()->getLine();
+        size_t col = ctx->getStart()->getCharPositionInLine();
+
+        diagnostics.reportSemanticError(line, col, "Cannot train " + modelName + " on an uninitialized " + trainSet + ".");
+        return {};
+    }
+
     mls::VariableType modelType = symbolTable.get(modelName).type;
     if (modelType != mls::VariableType::MODEL) {
         size_t line = ctx->getStart()->getLine();
