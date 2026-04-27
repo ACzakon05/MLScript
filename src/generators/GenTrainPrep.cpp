@@ -42,10 +42,10 @@ std::any PythonGenerator::visitSplitStat(MLScriptParser:: SplitStatContext *ctx)
 
     // Opcjonalne seed ii shufle
 
-    int seed =0;
+    std::string seed = "None";
     std::string shuffle = "True";
     if (ctx->SEED() && ctx->INTEGER()) {
-        seed = std::stoi(ctx->INTEGER()->getText());
+        seed = ctx->INTEGER()->getText();
     }
 
     // obsługa TRUE / FALSE

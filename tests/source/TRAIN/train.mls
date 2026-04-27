@@ -1,2 +1,5 @@
+load 'examples/data/data.csv' as csv into df;
+set target "first_name" for df;
+split df ratio 80:20 into train_set, test_set;
 create model lin_reg choose linear_regression;
 train lin_reg on train_set;

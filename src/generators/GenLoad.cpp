@@ -25,7 +25,7 @@ std::any PythonGenerator::visitLoadStat(MLScriptParser::LoadStatContext *ctx) {
         size_t line = ctx->getStart()->getLine();
         size_t col = ctx->getStart()->getCharPositionInLine();
 
-        diagnostics.reportSemanticWarning(line, col, "File " + filePath + "not found at compile time.");
+        diagnostics.reportSemanticWarning(line, col, "File " + filePath + " not found at compile time.");
     }
 
     visit(ctx->fileFormatLoadOptions());
