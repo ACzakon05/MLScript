@@ -1,5 +1,6 @@
 import pandas as pd
 from mlscript_runtime.error_handling.safe_execute_load import safe_execute_load
+from mlscript_runtime.error_handling.safe_execute_show import safe_execute_show
 # Normalize dataset
 if 'my_dataset' not in globals() and 'my_dataset' not in locals():
     raise NameError("Dataset my_dataset not found")

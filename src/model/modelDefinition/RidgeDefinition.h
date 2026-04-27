@@ -27,6 +27,10 @@ struct RidgeDefinition : public ModelDefinition {
         return os;
     }
 
+    std::string getRequiredImport() const override {
+        return "from sklearn.linear_model import Ridge\n";
+    }
+
 private:
     std::unordered_map<std::string, std::string> mlsToScikitParam = {
         {"alpha", "alpha"},

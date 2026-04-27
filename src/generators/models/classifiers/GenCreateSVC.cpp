@@ -1,10 +1,8 @@
-#include "PythonGenerator.h"
+#include "generators/models/ModelGenerator.h"
 #include "model/modelDefinition/SVCDefinition.h"
 #include "utils/ModelParamParseUtil.h"
 
-std::any PythonGenerator::visitCreateModelSVC(MLScriptParser::CreateModelSVCContext *ctx) {
-    pythonHeader << "from sklearn.svm import SVC\n";
-
+std::any ModelGenerator::visitCreateModelSVC(MLScriptParser::CreateModelSVCContext *ctx) {
     if (ctx->svcParamsList() != nullptr) {
         return visit(ctx->svcParamsList());
     }
@@ -14,7 +12,7 @@ std::any PythonGenerator::visitCreateModelSVC(MLScriptParser::CreateModelSVCCont
     return emptySVC;
 }
 
-std::any PythonGenerator::visitSvcParamsList(MLScriptParser::SvcParamsListContext *ctx) {
+std::any ModelGenerator::visitSvcParamsList(MLScriptParser::SvcParamsListContext *ctx) {
     std::shared_ptr<ModelDefinition> modelDefinition = std::make_shared<SVCDefinition>();
 
     auto svc = std::static_pointer_cast<SVCDefinition>(modelDefinition);
@@ -32,26 +30,26 @@ std::any PythonGenerator::visitSvcParamsList(MLScriptParser::SvcParamsListContex
     return modelDefinition;
 }
 
-std::any PythonGenerator::visitSvcParamC(MLScriptParser::SvcParamCContext *ctx) {
+std::any ModelGenerator::visitSvcParamC(MLScriptParser::SvcParamCContext *ctx) {
     return mlscript::ModelParamParseUtil::parseAlNumParam("c", ctx);
 }
 
-std::any PythonGenerator::visitSvcParamKernel(MLScriptParser::SvcParamKernelContext *ctx) {
+std::any ModelGenerator::visitSvcParamKernel(MLScriptParser::SvcParamKernelContext *ctx) {
     return mlscript::ModelParamParseUtil::parseAlNumParam("kernel", ctx);
 }
 
-std::any PythonGenerator::visitSvcParamDegree(MLScriptParser::SvcParamDegreeContext *ctx) {
+std::any ModelGenerator::visitSvcParamDegree(MLScriptParser::SvcParamDegreeContext *ctx) {
     return mlscript::ModelParamParseUtil::parseAlNumParam("degree", ctx);
 }
 
-std::any PythonGenerator::visitSvcParamGamma(MLScriptParser::SvcParamGammaContext *ctx) {
+std::any ModelGenerator::visitSvcParamGamma(MLScriptParser::SvcParamGammaContext *ctx) {
     return mlscript::ModelParamParseUtil::parseAlNumParam("gamma", ctx);
 }
 
-std::any PythonGenerator::visitSvcParamCoef0(MLScriptParser::SvcParamCoef0Context *ctx) {
+std::any ModelGenerator::visitSvcParamCoef0(MLScriptParser::SvcParamCoef0Context *ctx) {
     return mlscript::ModelParamParseUtil::parseAlNumParam("coef0", ctx);
 }
 
-std::any PythonGenerator::visitSvcParamProbability(MLScriptParser::SvcParamProbabilityContext *ctx) {
+std::any ModelGenerator::visitSvcParamProbability(MLScriptParser::SvcParamProbabilityContext *ctx) {
     return mlscript::ModelParamParseUtil::parseBooleanParam("probability", ctx);
 }

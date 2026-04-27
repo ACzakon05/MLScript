@@ -1,3 +1,4 @@
 import pandas as pd
 from mlscript_runtime.error_handling.safe_execute_load import safe_execute_load
+from mlscript_runtime.error_handling.safe_execute_show import safe_execute_show
 lin_reg.fit(train_set_X, train_set_y)

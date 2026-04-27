@@ -25,6 +25,10 @@ struct KNNRegDefinition : public ModelDefinition {
         return os;
     }
 
+    std::string getRequiredImport() const override {
+        return "from sklearn.neighbors import KNeighborsRegressor\n";
+    }
+
 private:
     std::unordered_map<std::string, std::string> mlsToScikitParam = {
         {"nneighbors", "n_neighbors"},

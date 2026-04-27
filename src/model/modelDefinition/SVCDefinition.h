@@ -27,6 +27,10 @@ struct SVCDefinition : public ModelDefinition {
         return os;
     }
 
+    std::string getRequiredImport() const override {
+        return "from sklearn.svm import SVC\n";
+    }
+
 private:
     std::unordered_map<std::string, std::string> mlsToScikitParam = {
         {"c", "C"},
