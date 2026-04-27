@@ -1,1 +1,2 @@
+create model lin_reg choose linear_regression;
 train lin_reg on train_set;

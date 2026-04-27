@@ -1,10 +1,8 @@
-#include "PythonGenerator.h"
+#include "generators/models/ModelGenerator.h"
 #include "model/modelDefinition/KNNRegDefinition.h"
 #include "utils/ModelParamParseUtil.h"
 
-std::any PythonGenerator::visitCreateModelKNNReg(MLScriptParser::CreateModelKNNRegContext *ctx) {
-    pythonHeader << "from sklearn.neighbors import KNeighborsRegressor\n";
-
+std::any ModelGenerator::visitCreateModelKNNReg(MLScriptParser::CreateModelKNNRegContext *ctx) {
     if (ctx->knnParamsList() != nullptr) {
         return visit(ctx->knnParamsList());
     }
@@ -14,7 +12,7 @@ std::any PythonGenerator::visitCreateModelKNNReg(MLScriptParser::CreateModelKNNR
     return emptyKNNReg;
 }
 
-std::any PythonGenerator::visitKnnParamsList(MLScriptParser::KnnParamsListContext *ctx) {
+std::any ModelGenerator::visitKnnParamsList(MLScriptParser::KnnParamsListContext *ctx) {
     std::shared_ptr<ModelDefinition> modelDefinition = std::make_shared<KNNRegDefinition>();
 
     auto knnReg = std::static_pointer_cast<KNNRegDefinition>(modelDefinition);
@@ -32,18 +30,18 @@ std::any PythonGenerator::visitKnnParamsList(MLScriptParser::KnnParamsListContex
     return modelDefinition;
 }
 
-std::any PythonGenerator::visitKNNRegParamNNeighbors(MLScriptParser::KNNRegParamNNeighborsContext *ctx) {
+std::any ModelGenerator::visitKNNRegParamNNeighbors(MLScriptParser::KNNRegParamNNeighborsContext *ctx) {
     return mlscript::ModelParamParseUtil::parseAlNumParam("nneighbors", ctx);
 }
 
-std::any PythonGenerator::visitKNNRegParamWeights(MLScriptParser::KNNRegParamWeightsContext *ctx) {
+std::any ModelGenerator::visitKNNRegParamWeights(MLScriptParser::KNNRegParamWeightsContext *ctx) {
     return mlscript::ModelParamParseUtil::parseAlNumParam("weights", ctx);
 }
 
-std::any PythonGenerator::visitKNNParamAlgo(MLScriptParser::KNNParamAlgoContext *ctx) {
+std::any ModelGenerator::visitKNNParamAlgo(MLScriptParser::KNNParamAlgoContext *ctx) {
     return mlscript::ModelParamParseUtil::parseAlNumParam("algorithm", ctx);
 }
 
-std::any PythonGenerator::visitKNNParamNJobs(MLScriptParser::KNNParamNJobsContext *ctx) {
+std::any ModelGenerator::visitKNNParamNJobs(MLScriptParser::KNNParamNJobsContext *ctx) {
     return mlscript::ModelParamParseUtil::parseAlNumParam("njobs", ctx);
 }

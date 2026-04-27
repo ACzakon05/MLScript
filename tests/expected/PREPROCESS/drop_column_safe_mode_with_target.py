@@ -1,14 +1,13 @@
 import pandas as pd
 from mlscript_runtime.error_handling.safe_execute_load import safe_execute_load
+from mlscript_runtime.error_handling.safe_execute_show import safe_execute_show
 with safe_execute_load(f"loading 'data.csv'"):
 	my_dataset = pd.read_csv(
 		filepath_or_buffer='data.csv',
 		delimiter=",",
 		header="infer"
 	)
-#Set target column for my_dataset: target_col
-my_dataset_y = my_dataset["target_col"]
-my_dataset_X = my_dataset.drop(["target_col"])
+# Marked 'target_col' as target for dataset 'my_dataset'
 # Drop columns from my_dataset
 if 'my_dataset' not in globals() and 'my_dataset' not in locals():
     raise NameError("Dataset my_dataset not found")

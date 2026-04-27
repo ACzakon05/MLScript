@@ -1,7 +1,7 @@
 #include "PythonGenerator.h"
 
 std::any PythonGenerator::visitShowStat(MLScriptParser::ShowStatContext *ctx) {
-    pythonCode << "with safe_execute_load('displaying data'):\n";
+    pythonCode << "with safe_execute_show('displaying data'):\n";
     pythonCode << "\tprint(";
 
     visitChildren(ctx);

@@ -25,6 +25,10 @@ struct LinRegDefinition : public ModelDefinition {
         return os;
     }
 
+    std::string getRequiredImport() const override {
+        return "from sklearn.linear_model import LinearRegression\n";
+    }
+
 private:
     std::unordered_map<std::string, std::string> mlsToScikitParam = {
         {"fitintercept", "fit_intercept"},

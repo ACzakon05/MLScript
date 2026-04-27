@@ -1,4 +1,5 @@
 #include "PythonGenerator.h"
+#include "ModelGenerator.h"
 #include "model/modelDefinition/ModelDefinition.h"
 #include "utils/ModelParamParseUtil.h"
 #include "semantics/SymbolTable.h"
@@ -16,11 +17,14 @@ std::any PythonGenerator::visitCreateModelStat(MLScriptParser::CreateModelStatCo
 
     pythonCode << modelName << " = ";
 
-    std::any modelDefinitionAny = visit(ctx->modelDefinition());
+    ModelGenerator modelGen(diagnostics);
+
+    std::any modelDefinitionAny = modelGen.visit(ctx->modelDefinition());
     
     try {
         auto modelDefinition = std::any_cast<std::shared_ptr<ModelDefinition>>(modelDefinitionAny);
 
+        pythonHeader << modelDefinition->getRequiredImport();
         modelDefinition->toScikit(pythonCode);
     } catch (const std::bad_any_cast& e) {
         diagnostics.reportSemanticError(line, col, "Expected a ModelDefinition in Model generation");
