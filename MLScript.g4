@@ -20,6 +20,7 @@ statement
        | preprocessStat
        | createModelStat
        | trainStat
+       | predictStat
        ;
 
 // --------------------------------------------------
@@ -271,6 +272,15 @@ trainStat
        : TRAIN modelName=IDENTIFIER ON trainSet=IDENTIFIER
        ;
 
+
+// --------------------------------------------------
+// PREDICT command
+// --------------------------------------------------
+
+predictStat
+       : PREDICT modelName=IDENTIFIER ON trainSet=IDENTIFIER INTO predictions=IDENTIFIER
+       ;
+
 // --------------------------------------------------
 // Shared
 // --------------------------------------------------
@@ -458,6 +468,11 @@ DEGREE:      D E G R E E ;
 GAMMA:       G A M M A ;
 KERNEL:      K E R N E L ;
 PROBABILITY: P R O B A B I L I T Y ;
+
+// --------------------------------------------------
+// Predict
+// --------------------------------------------------
+PREDICT: P R E D I C T ;
 
 // --------------------------------------------------
 // Punctuation

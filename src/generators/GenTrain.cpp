@@ -28,8 +28,18 @@ std::any PythonGenerator::visitTrainStat(MLScriptParser::TrainStatContext *ctx) 
 
         diagnostics.reportSemanticWarning(line, col, "Trying to train object " + modelName + " of type " + mls::to_string(modelType) + " (expected MODEL).");
     }
+    VariableMetadata meta = symbolTable.get(trainSet);
 
-    std::string targetCol = symbolTable.get(trainSet).targetColumnName;
+    std::string targetCol = meta.targetColumnName;
+
+    if (targetCol.empty()) {
+        size_t line = ctx->getStart()->getLine();
+        size_t col = ctx->getStart()->getCharPositionInLine();
+
+        diagnostics.reportSemanticError(line, col,
+            "Dataset " + trainSet + " has no target set.");
+        return {};
+    }
     
     pythonCode << "X_train = " << trainSet << ".drop(columns=['" << targetCol << "'])\n";
     pythonCode << "y_train = " << trainSet << "['" << targetCol << "']\n";

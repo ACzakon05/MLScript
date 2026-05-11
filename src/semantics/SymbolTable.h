@@ -11,6 +11,8 @@ struct VariableMetadata {
     mls::VariableType type;
     std::string originDataset;
     std::string targetColumnName = "";
+    bool isTrained=false;
+    std::string trainedFeatureColumnsVariable;
 };
 
 class SymbolTable {
