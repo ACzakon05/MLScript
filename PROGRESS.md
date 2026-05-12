@@ -118,3 +118,6 @@
 ## TRAIN - trenowanie modeli
 * [x] obsługa komendy `TRAIN`
 * [x] dostosowanie komendy train do wprowadzonej `CREATE`
+
+## PREDICT
+* [x] obsługa komendy `PREDICT`
