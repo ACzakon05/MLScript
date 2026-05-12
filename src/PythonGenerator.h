@@ -304,4 +304,10 @@ private:
      * @brief Returns a list comprehension for filtering columns based on conditions.
      */
     std::string applyColumnConditions(MLScriptParser::WhereClauseContext *ctx, const std::string& dataSet);
+    /**
+     * @brief Predict...
+     */
+    std::any visitPredictStat(MLScriptParser::PredictStatContext *ctx) override;
+
+
 };

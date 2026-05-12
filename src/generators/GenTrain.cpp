@@ -44,6 +44,15 @@ std::any PythonGenerator::visitTrainStat(MLScriptParser::TrainStatContext *ctx) 
     pythonCode << "X_train = " << trainSet << ".drop(columns=['" << targetCol << "'])\n";
     pythonCode << "y_train = " << trainSet << "['" << targetCol << "']\n";
     pythonCode << modelName << ".fit(X_train, y_train)\n";
+    pythonCode << "feature_columns_" << modelName
+           << " = X_train.columns.tolist()\n";
+
+    VariableMetadata modelMeta = symbolTable.get(modelName);
+
+    modelMeta.isTrained = true;
+    modelMeta.trainedFeatureColumnsVariable = "feature_columns_" + modelName;
+
+    symbolTable.updateVariable(modelName, modelMeta);
 
     return {};
 }

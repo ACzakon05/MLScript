@@ -278,7 +278,7 @@ trainStat
 // --------------------------------------------------
 
 predictStat
-       : PREDICT modelName=IDENTIFIER ON trainSet=IDENTIFIER INTO predictions=IDENTIFIER
+       : PREDICT modelName=IDENTIFIER ON dataSet=IDENTIFIER INTO predictions=IDENTIFIER
        ;
 
 // --------------------------------------------------

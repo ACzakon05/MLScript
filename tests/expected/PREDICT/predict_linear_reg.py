@@ -27,3 +27,6 @@ X_train = train_set.drop(columns=['first_name'])
 y_train = train_set['first_name']
 lin_reg.fit(X_train, y_train)
 feature_columns_lin_reg = X_train.columns.tolist()
+X_predict = test_set[feature_columns_lin_reg]
+predictions = lin_reg.predict(X_predict)
+print(predictions)
