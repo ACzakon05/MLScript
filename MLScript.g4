@@ -20,6 +20,7 @@ statement
        | preprocessStat
        | createModelStat
        | trainStat
+       | exportModelStat
        ;
 
 // --------------------------------------------------
@@ -271,6 +272,23 @@ trainStat
        : TRAIN modelName=IDENTIFIER ON trainSet=IDENTIFIER
        ;
 
+
+// --------------------------------------------------
+// EXPORT MODEL command
+// --------------------------------------------------
+
+exportModelStat
+       : EXPORT MODEL modelName=IDENTIFIER AS exportName=STRING (WITH exportParam)?
+       ;
+
+exportParam
+       : FORMAT val=exportFileFormat  #ExportModelFormatParam
+       ;
+
+exportFileFormat
+       : JOBLIB
+       ;
+
 // --------------------------------------------------
 // Shared
 // --------------------------------------------------
@@ -458,6 +476,17 @@ DEGREE:      D E G R E E ;
 GAMMA:       G A M M A ;
 KERNEL:      K E R N E L ;
 PROBABILITY: P R O B A B I L I T Y ;
+
+// --------------------------------------------------
+// EXPORT MODEL keywords
+// --------------------------------------------------
+
+EXPORT:   E X P O R T ;
+FORMAT:   F O R M A T ;
+
+// File formats
+
+JOBLIB:   J O B L I B ;
 
 // --------------------------------------------------
 // Punctuation
