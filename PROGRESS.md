@@ -1,120 +1,105 @@
+# Progress
 
 ---
 
-#  FUNKCJONALNOŚĆ JĘZYKA
+## Ładowanie i wyświetlanie danych
+
+### LOAD
+
+* [x] Obsługa plików `.csv` (wraz z opcjami)
+* [x] Obsługa plików `.json` (wraz z opcjami)
+* [x] Ładowanie wybranej liczby wierszy
+* [x] Obsługa błędów
+
+### SHOW
+
+* [x] Wyświetlanie całego datasetu
+* [x] Wyświetlanie wybranych kolumn i wierszy
+* [x] Wyświetlanie nazw kolumn
+* [x] Wyświetlanie liczby kolumn i wierszy
+* [ ] Filtrowanie wyników klauzulą `WHERE`
+* [ ] Obsługa błędów
 
 ---
 
-## LOAD - ładowanie danych
+## Przygotowanie danych (Data Split & Target)
 
-* [x] komenda `LOAD` wspiera pliki `.csv` wraz z opcjami
-* [x] komenda `LOAD` wspiera pliki `.json` wraz z opcjami
-* [x] komenda `LOAD` wspiera ładowanie wybranej liczby wierszy
-* [x] obsługa błędów dla komendy `LOAD`
+### SET TARGET
 
----
+* [x] Przypisanie kolumny jako target
+* [x] Ochrona targetu przed usunięciem (w `DROP COLUMN`)
+* [ ] Obsługa błędów (np. nieistniejąca kolumna)
 
-## SHOW - wyświetlanie danych
+### SPLIT
 
-* [x] komenda `SHOW` wspiera wyświetlanie nazw kolumn
-* [x] komenda `SHOW` wspiera wyświetlanie liczby kolumn/wierszy
-* [x] komenda `SHOW` wspiera wyświetlanie wybranych kolumn
-* [x] komenda `SHOW` wspiera wyświetlanie wybranych wierszy
-* [x] komenda `SHOW` wspiera wyświetlanie całego datasetu
-* [x] komenda `SHOW` wspiera wyświetlanie kilku kolumn datasetu
-* [ ] komenda `SHOW` wspiera filtrowanie klauzulą `WHERE`
-* [ ] obsługa błędów dla komendy `SHOW`
+* [x] Podział na zbiór `train` / `test` + wydzielenie targetu
+* [x] Parametry podziału: `ratio`, `seed`, `shuffle`
+* [ ] Walidacja istnienia targetu przed podziałem
+* [ ] Obsługa błędów (np. błędny ratio, brak datasetu)
 
 ---
 
-## SET TARGET - wybór kolumny target
+## Preprocessing i transformacje
 
-* [x] komenda `SET TARGET` wspiera przypisanie kolumny target
-* [ ] obsługa błędów, np. nieistniejąca kolumna
-* [x] ochrona targetu przed usunięciem w `DROP COLUMN`
+### DROP NA (Brakujące wartości)
 
----
-
-## SPLIT - podział na zbiór treningowy i testowy
-
-* [x] komenda `SPLIT` wspiera ratio, seed i shuffle
-* [x] generowanie `train/test + target split`
-* [ ] obsługa błędów, np. błędny ratio, brak datasetu
-* [ ] walidacja czy target istnieje przed split
-
----
-
-## PREPROCESSING - czyszczenie i transformacje danych
-
-### DROP NA
-
-* [x] komenda `DROP NA` usuwa brakujące wartości z całego datasetu
-* [x] komenda `DROP NA` wspiera operację na wybranych kolumnach (`ON COLUMNS`)
-* [ ] możliwość wyboru strategii (`DROP_ROWS`, `DROP_COLUMNS`, `FILL_MEAN`, `FILL_MEDIAN`)
-* [ ] obsługa błędów (brak kolumn, brak datasetu)
-
----
+* [x] Usuwanie z całego datasetu
+* [x] Usuwanie z wybranych kolumn (`ON COLUMNS`)
+* [ ] Wybór strategii (`DROP_ROWS`, `DROP_COLUMNS`, `FILL_MEAN`, `FILL_MEDIAN`)
+* [ ] Obsługa błędów
 
 ### DROP COLUMN
 
-* [x] komenda `DROP COLUMN` usuwa pojedynczą kolumnę
-* [x] obsługa wielu kolumn w jednej komendzie
-* [x] tryb bezpieczny (`SAFE MODE`) chroniący np. target
-* [x] warunkowe usuwanie kolumn (`WHERE TYPE`, `MISSING RATE`)
-* [x] uniwersalny check datasetu i kolumn przed wykonaniem operacji
-* [x] walidacja datasetu i listy kolumn przed wykonaniem operacji
-
-
----
+* [x] Usuwanie pojedynczej kolumny oraz wielu kolumn jednocześnie
+* [x] Tryb `SAFE MODE` (ochrona ważnych kolumn, np. targetu)
+* [x] Warunkowe usuwanie (`WHERE TYPE`, `MISSING RATE`)
+* [x] Walidacja datasetu i listy kolumn przed wykonaniem operacji
 
 ### NORMALIZE
 
-* [x] komenda `NORMALIZE` działa na całym datasetcie
-* [x] komenda `NORMALIZE` działa na wybranych kolumnach
-* [ ] wybór metody (`MINMAX`, `ROBUST`)
-* [ ] wybór zakresu (`[0,1]`, `[-1,1]`)
-* [ ] obsługa wartości NaN / INF
-* [ ] obsługa błędów (kolumny nie-numeryczne)
-
----
+* [x] Działanie na całym datasetcie oraz na wybranych kolumnach
+* [ ] Wybór metody (`MINMAX`, `ROBUST`) i zakresu (`[0,1]`, `[-1,1]`)
+* [ ] Obsługa wartości `NaN` / `INF`
+* [ ] Obsługa błędów (np. kolumny nie-numeryczne)
 
 ### STANDARDIZE
 
-* [x] komenda `STANDARDIZE` działa na całym datasetcie
-* [x] komenda `STANDARDIZE` działa na wybranych kolumnach
-* [ ] wybór wariantu (`ddof=0`, `ddof=1`)
-* [ ] tryb global vs per-column
-* [ ] parametr stabilizacji (`EPS`)
-* [ ] obsługa błędów (kolumny nie-numeryczne)
+* [x] Działanie na całym datasetcie oraz na wybranych kolumnach
+* [ ] Wybór wariantu (`ddof=0`, `ddof=1`)
+* [ ] Tryb globalny vs per-kolumna
+* [ ] Parametr stabilizacji (`EPS`)
+* [ ] Obsługa błędów
 
 ---
 
-## WHERE - deklaracje warunkowe
+## Logika warunkowa (WHERE)
 
-* [x] wspiera zagnieżdżanie warunków nawiasami
-* [x] wspiera negację warunków operatorem NOT
-* [x] wspiera łączenie warunków operatorami logicznymi AND i OR
-* [x] wspiera relacje (`=`, `!=`, `>`, `>=`, `<`, `<=`)
-* [ ] prawidłowe rozróżnienie: kolumna vs string literal
-* [ ] optymalizacja ewaluacji warunków
-
----
-
-## CREATE - tworzenie modeli
-* [x] wspiera tworzenie modelu
-* [x] wspiera `LinearRegression` wraz z parametrami
-* [x] wspiera `SVC` wraz z parametrami
-* [x] wspiera `Ridge` wraz z parametrami
-* [x] wspiera `KNeighborsRegression` wraz z parametrami
-* [ ] wspiera inne modele
-* [x] naprawa błedu, gdzie `CREATE` wymaga `WITH` nawet bez parametrów
-* [x] możliwość zamiany kolejności parametrów
-* [ ] obłsuga błędów
-* [ ] testy
-* [x] obmyślenie krótszego i uniwersalnego sposobu na ustawianie parametrów w `visit*ParamsList` dla każdego typu modelu
+* [x] Relacje (`=`, `!=`, `>`, `>=`, `<`, `<=`)
+* [x] Łączenie warunków operatorami `AND` i `OR`
+* [x] Negacja warunków (`NOT`)
+* [x] Zagnieżdżanie warunków nawiasami
+* [ ] Prawidłowe rozróżnienie: kolumna vs string literal
+* [ ] Optymalizacja ewaluacji warunków
 
 ---
 
-## TRAIN - trenowanie modeli
-* [x] obsługa komendy `TRAIN`
-* [x] dostosowanie komendy train do wprowadzonej `CREATE`
+## Modelowanie (Tworzenie i Trening)
+
+### CREATE (Tworzenie modeli)
+
+* [x] Uniwersalny mechanizm tworzenia modeli (w tym przypisywanie parametrów `visit*ParamsList`)
+* [x] Opcjonalność słowa kluczowego `WITH` przy braku parametrów (naprawiony błąd)
+* [x] Możliwość definiowania parametrów w dowolnej kolejności
+* [x] Obsługiwane modele:
+  * [x] `LinearRegression`
+  * [x] `Ridge`
+  * [x] `KNeighborsRegression`
+  * [x] `SVC`
+* [ ] Dodanie wsparcia dla innych modeli
+* [ ] Obsługa błędów przy błędnych parametrach
+* [ ] Napisanie testów jednostkowych
+
+### TRAIN (Trenowanie)
+
+* [x] Obsługa komendy `TRAIN`
+* [x] Integracja wykonania `TRAIN` z modelami zainicjowanymi przez `CREATE`
