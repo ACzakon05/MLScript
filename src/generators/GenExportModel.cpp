@@ -34,6 +34,11 @@ std::any PythonGenerator::visitExportModelStat(MLScriptParser::ExportModelStatCo
         pythonHeader << "import joblib\n";
 
         pythonCode << "joblib.dump(" + modelName + ", " + fileName + ")\n";
+    } else if (fileFormat == "pkl") {
+        pythonHeader << "import pickle\n";
+
+        pythonCode << "with open(" + fileName + ", 'wb') as file:\n";
+        pythonCode << "\tpickle.dump(" + modelName + ", file)\n";
     }
 
     return {};

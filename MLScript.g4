@@ -287,6 +287,7 @@ exportParam
 
 exportFileFormat
        : JOBLIB
+       | PKL
        ;
 
 // --------------------------------------------------
