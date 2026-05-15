@@ -30,6 +30,13 @@ std::any PythonGenerator::visitExportModelStat(MLScriptParser::ExportModelStatCo
         }
     }
 
+    fileName.erase(
+        std::remove(fileName.begin(), fileName.end(), '\''),
+        fileName.end()
+    );
+
+    fileName = "'" +  fileName + "." + fileFormat + "'";
+
     if (fileFormat == "joblib") {
         pythonHeader << "import joblib\n";
 
