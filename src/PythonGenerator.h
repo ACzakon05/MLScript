@@ -246,6 +246,12 @@ public:
      */
     std::any visitTrainStat(MLScriptParser::TrainStatContext *ctx) override;
 
+    // == Export ==
+
+    std::any visitExportModelStat(MLScriptParser::ExportModelStatContext *ctx) override;
+
+    std::any visitExportModelFormatParam(MLScriptParser::ExportModelFormatParamContext *ctx) override;
+
 private:
     /**
      * 
